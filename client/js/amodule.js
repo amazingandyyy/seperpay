@@ -4,7 +4,7 @@ angular
     .module('pinchApp', [
         'ui.router',
         'satellizer',
-        'ui.bootstrap',
+        // 'ui.bootstrap',
         'ngFileUpload',
         'ngImgCrop'
     ])

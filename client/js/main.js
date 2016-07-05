@@ -3,6 +3,7 @@
 $(document).ready(init);
 
 function init() {
+    console.log('jquery loaded');
     sticky()
     windowScrollDown()
 }
@@ -17,7 +18,7 @@ function windowScrollDown() {
     var lastScrollTop = 0
     var st
     $(window).scroll(function() {
-        console.log($(window).scrollTop());
+        // console.log($(window).scrollTop());
         st = $(this).scrollTop();
         if (st < lastScrollTop) {
             $('.home-page nav').removeClass('folded')
