@@ -1,0 +1,25 @@
+<div class="card card-block profile-card">
+    <h5 class="setting-head">Profile Card Preview</h5>
+    <img src="{{updateUserData.profilePicture}}" class="img-thumbnail">
+    <hr>
+    <h4 class="card-title">{{updateUserData.displayName}}</h4>
+    <p class="text-capitalize title">{{updateUserData.title}}</p>
+    <a class="icon-link" ng-if="updateUserData.email" href="mailto:{{updateUserData.email}}" target="_top"><i class="fa fa-envelope"></i></a>
+    <a class="icon-link" ng-if="updateUserData.personalStie" href="{{updateUserData.personalStie}}" target="_blank"><i class="fa fa-globe"></i></a>
+</div>
+<div class="card card-block ache">
+    <div class="row">
+        <div class="col-xs-4 col">
+            <span class="num">{{updateUserData.projects.length}}</span>
+            <br><span class="word">Projects</span>
+        </div>
+        <div class="col-xs-4 col" ng-controller="ppageCtrl">
+            <span class="num">{{starred()}}</span>
+            <br><span class="word">Starred</span>
+        </div>
+        <div class="col-xs-4 col">
+            <span class="num">{{updateUserData.followersList.length}}</span>
+            <br><span class="word">Followers</span>
+        </div>
+    </div>
+</div>

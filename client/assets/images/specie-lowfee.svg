@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="78px" height="78px" viewBox="0 0 78 78" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>specie-lowfee</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="78" height="78"></rect>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="78" height="78" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="specie-lowfee" stroke="#333333">
+            <use id="Rectangle-74-Copy-4" mask="url(#mask-2)" stroke-width="4" xlink:href="#path-1"></use>
+            <path d="M32.8250037,35.4110453 C31.7171805,34.5288066 31,33.4717818 31,32.129 C31,29.24 33.057,27.043 36.263,26.52 L36.263,23 L38.423,23 L38.423,26.38 C40.515,26.45 43.6972818,28.1250002 44.7072818,28.7150002 L43.7189996,30.8615146 C42.9889996,30.4435146 39.922,28.715 37.691,28.715 C35.008,28.715 33.997,30.319 33.997,31.712 C33.997,33.524 35.287,34.429 38.318,35.685 C39.8765737,36.3207626 41.1000314,37.0217757 41.9855067,37.8655946 L32.8250037,35.4110453 Z" id="Combined-Shape"></path>
+            <path d="M38.8907473,42 C39.1026694,42.0847865 39.3150196,42.1686651 39.527,42.2519069 C42.107,43.2969069 42.002,44.5108168 42.002,46.4258168 C42.002,48.4108168 40.328,49.8408168 37.854,49.8408168 C35.903,49.8408168 31.8185356,47.9430224 30.5635356,47.1060224 L29.4149049,48.8925176 C30.7328982,50.2131886 35.311,52.1758168 37.332,52.2118168 L37.332,55.7288168 L39.527,55.7288168 L39.527,52.1048168 C43.115,51.5108168 45.032,48.9328168 45.032,46.1808168 C45.032,45.1517454 44.8327099,44.2648826 44.4354063,43.4856869 L38.8907473,42 Z" id="Combined-Shape"></path>
+            <path d="M2,29 L76,50" id="Line" stroke-width="2" stroke-linecap="square" stroke-dasharray="1,5,1,7"></path>
+        </g>
+    </g>
+</svg>

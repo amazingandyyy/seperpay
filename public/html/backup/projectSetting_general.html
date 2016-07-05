@@ -1,0 +1,46 @@
+<div style="max-width: 700px;">
+        <h5 class="setting-head">Project general infomation</h5>
+        <hr/>
+        <!-- <div class="form-group row">
+            <div class="col-xs-12">
+                <label for="formGroupExampleInput">Profile picture</label>
+            </div>
+            <div class="col-xs-3">
+                <img src="{{currentUser.profilePicture}}" class="img-thumbnail">
+            </div>
+            <div class="col-xs-8">
+                <label class="file">
+                    <input type="file" id="file">
+                    <span class="file-custom"></span>
+                </label>
+            </div>
+        </div> -->
+        <form ng-submit="updateProjectDataSubmitted()">
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput">Project Name</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="your name" ng-model="updateProjectData.title">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Public email</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="your email" ng-model="updateProjectData.email">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Bio</label>
+                <textarea type="text" class="form-control" id="formGroupExampleInput2" placeholder="Tell a little about yourself." rows="4" cols="50" ng-model="updateProjectData.bio"></textarea>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">URL</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="your email" ng-model="updateProjectData.personalStie">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Location</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="your email" ng-model="updateProjectData.location">
+            </fieldset>
+            <div>
+                <small>We store your personal data in the United States. See our privacy policy for more information.</small>
+                <br>
+                <button type="submit" class="btn btn-primary hidden-xs-down btn-md pull-xs-left">Update profile</button>
+            </div>
+        </form>
+    <!-- <button type="button" class="btn btn-primary hidden-xs-down btn-lg pull-xs-left">Save</button> -->
+</div>

@@ -1,0 +1,81 @@
+<div class="row">
+    <div class="col-lg-8">
+            <h5 class="setting-head sticky2">Public profile</h5>
+            <hr/>
+        <div class="form-group row">
+            <div class="col-xs-12">
+                <label for="formGroupExampleInput">Profile picture</label>
+            </div>
+            <div class="col-xs-3 settingProfilePhoto" ng-init="">
+                <img ng-class="photoUploading?'loading':''" src="{{currentUser.profilePicture}}" class="img-thumbnail">
+                <img ng-class="photoUploading?'loading':''" src="/assets/loader-dots-dark.svg" class="loadingIcon" style="height: 15px;">
+            </div>
+            <div class="col-xs-8">
+                <button type="button" class="btn btn-primary-outline" ngf-select="uploadFiles($files)" ngf-drop="uploadFiles($files)" ng-model="profilePhoto" ngf-drag-over-class="'dragover'" ngf-max-size="5MB" accept="image/*">upload photo</button>
+                <br/>
+            </div>
+        </div>
+        <form ng-submit="updateUserDataSubmitted()">
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput">Name</label>
+                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="your name" ng-model="updateUserData.displayName">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Public email</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="your email" ng-model="updateUserData.email">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Title</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Full stack dev, JS Ninja, New dev..." ng-model="updateUserData.title">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Bio</label>
+                <textarea type="text" class="form-control" id="formGroupExampleInput2" placeholder="Tell a little about yourself." rows="4" cols="50" ng-model="updateUserData.bio"></textarea>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">URL</label>
+                <input type="url" class="form-control" id="formGroupExampleInput2" placeholder="your personal website or whatever link" ng-model="updateUserData.personalStie">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="formGroupExampleInput2">Location</label>
+                <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="your location" ng-model="updateUserData.location">
+            </fieldset>
+            <div>
+                <small>We store your personal data in the United States. See our privacy policy for more information.</small>
+                <br>
+                <button type="submit" class="btn btn-primary hidden-xs-down btn-md pull-xs-left">Update profile</button>
+                <button type="button" class="btn btn-primary hidden-sm-up btn-block btn-lg pull-xs-right no-radius">Save</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-4 col hidden-md-down personal-page">
+        <div class="setting-preview sticky">
+            <div class="card card-block profile-card">
+                <h5 class="setting-head">Profile Card Preview</h5>
+                <img src="{{updateUserData.profilePicture}}" class="img-thumbnail">
+                <hr>
+                <h4 class="card-title">{{updateUserData.displayName}}</h4>
+                <p class="text-capitalize title">{{updateUserData.title}}</p>
+                <a class="icon-link" ng-if="updateUserData.email" href="mailto:{{updateUserData.email}}" target="_top"><i class="fa fa-envelope"></i></a>
+                <a class="icon-link" ng-if="updateUserData.personalStie" href="{{updateUserData.personalStie}}" target="_blank"><i class="fa fa-globe"></i></a>
+            </div>
+            <div class="card card-block ache">
+                <div class="row">
+                    <div class="col-xs-4 col">
+                        <span class="num">{{updateUserData.projects.length}}</span>
+                        <br><span class="word">Projects</span>
+                    </div>
+                    <div class="col-xs-4 col" ng-controller="ppageCtrl">
+                        <span class="num">{{starred()}}</span>
+                        <br><span class="word">Starred</span>
+                    </div>
+                    <div class="col-xs-4 col">
+                        <span class="num">{{updateUserData.followersList.length}}</span>
+                        <br><span class="word">Followers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src='/js/bundle.min.js'></script>

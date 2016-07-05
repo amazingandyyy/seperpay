@@ -1,0 +1,49 @@
+<!-- <div style="padding: .5rem 2rem;"> -->
+<div class="personal-page" ng-init="init()">
+    <div class="jumbotron" style="background: #4080ff; border-radius: 0px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="left-section">
+                        <button ng-if="state.isAuthor" type="button" class="btn btn-secondary-outline btn-sm" style="margin: auto; display: block" ui-sref="projectSetting({projectId: project._id})">update project</button>
+                        <div class="card card-block profile-card">
+                            <img src="{{project.logo}}" class="img-thumbnail">
+                            <h4 class="card-title nice-br">{{project.title}}</h4>
+                            <p class="text-capitalize title">{{project.pitch}}</p>
+                            <a class="icon-link tool-tip-n" ng-if="user.email" href="mailto:{{user.email}}" target="_top" data-placement="bottom" title="contact by email" tool-tip><i class="fa fa-envelope"></i></a>
+                            <a class="icon-link tool-tip-n" ng-if="user.personalStie" href="{{user.personalStie}}" target="_blank" data-placement="bottom" title="personal link" tool-tip><i class="fa fa-globe"></i></a>
+                            <div ng-if="!state.isTheUser" class="nice-br">
+                                <button ng-click="like(currentUser._id, project._id)" class="btn btn-primary-outline btn-sm likeBtn" ng-class="likeStatus? 'active':'' ">like<span ng-if="likeStatus">d</span></button>
+                            </div>
+                        </div>
+                        <div class="card card-block ache unselectable">
+                            <div class="row">
+                                <div class="col-xs-4 col">
+                                    <span ui-sref="ppage_projects" class="num">{{user.projects.length}}</span>
+                                    <br>
+                                    <span ui-sref="ppage_projects" class="word">Projects</span>
+                                </div>
+                                <div class="col-xs-4 col">
+                                    <span ui-sref="ppage_starred" class="num">{{starred()}}</span>
+                                    <br>
+                                    <span ui-sref="ppage_starred" class="word">Starred</span>
+                                </div>
+                                <div class="col-xs-4 col">
+                                    <span ui-sref="ppage_likeers" class="num">{{user.likeersList.length}}</span>
+                                    <br>
+                                    <span ui-sref="ppage_likeers" class="word">Followers</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div class="right-section" ui-view="info_section">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<!-- <div style="padding: .5rem 2rem;"> -->
+<div class="personal-page" ng-init="init()">
+    <div class="jumbotron" style="background: #4080ff; border-radius: 0px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="left-section">
+                        <button ng-if="state.isTheUser" type="button" class="btn btn-secondary-outline btn-sm" ui-sref="profileSetting({userId: currentUser._id})">update profile</button>
+                        <div class="card card-block profile-card">
+                            <img src="{{user.profilePicture}}" class="img-thumbnail">
+                            <hr>
+                            <h4 class="card-title">{{user.displayName}}</h4>
+                            <p class="text-capitalize title">{{user.title}}</p>
+                            <a class="icon-link tool-tip-n" ng-if="user.email" href="mailto:{{user.email}}" target="_top" data-placement="bottom" title="contact by email" tool-tip><i class="fa fa-envelope"></i></a>
+                            <a class="icon-link tool-tip-n" ng-if="user.personalStie" href="{{user.personalStie}}" target="_blank" data-placement="bottom" title="personal link" tool-tip><i class="fa fa-globe"></i></a>
+                            <div ng-if="!state.isTheUser" class="nice-br">
+                                <button ng-click="follow(currentUser._id, user._id)" class="btn btn-primary-outline btn-sm followBtn" ng-class="state.followStatus? 'active':'' ">follow<span ng-if="state.followStatus">ing</span></button>
+                            </div>
+                        </div>
+                        <div class="card card-block ache unselectable">
+                            <div class="row">
+                                <div class="col-xs-4 col">
+                                    <span ui-sref="ppage_projects" class="num">{{user.projects.length}}</span>
+                                    <br>
+                                    <span ui-sref="ppage_projects" class="word">Projects</span>
+                                </div>
+                                <div class="col-xs-4 col">
+                                    <span ui-sref="ppage_liked" class="num">{{user.liked.length}}</span>
+                                    <br>
+                                    <span ui-sref="ppage_liked" class="word">Liked</span>
+                                </div>
+                                <div class="col-xs-4 col">
+                                    <span ui-sref="ppage_followers" class="num">{{user.followersList.length}}</span>
+                                    <br>
+                                    <span ui-sref="ppage_followers" class="word">Followers</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div class="right-section" ui-view="right_section"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

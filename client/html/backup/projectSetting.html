@@ -1,0 +1,31 @@
+<div class="setting-page" ng-init="init()">
+    <div class="col-sm-4 col-md-3 col-xl-2 col-left hidden-xs-down">
+        <div class="left-section">
+            <ul class="nav">
+                <span class="settingLog unselectable">
+                    <p>setting of<br>project: {{project.title}}</p>
+                </span>
+                <li ui-sref-active="active" class="nav-item-first nav-item unselectable" ui-sref="projectSetting_general">
+                    <div class="nav-link">general</div>
+                </li>
+                <li ui-sref-active="active" class="nav-item unselectable" ui-sref="projectSetting_request">
+                    <div class="nav-link">requests</div>
+                </li>
+                <li ui-sref-active="active" class="nav-item unselectable" ui-sref="projectSetting_privacy">
+                    <div class="nav-link">privacy</div>
+                </li>
+                <li ui-sref-active="active-danger" class="nav-item unselectable" ui-sref="projectSetting_danger">
+                    <div class="nav-link">danger zone</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-sm-8 col-md-9 col-xl-10">
+            <div class="right-section" ui-view="right_section"></div>
+        </div>
+    </div>
+    <!-- <button ng-if="$state.includes('danger')" type="button" class="btn btn-primary hidden-sm-up btn-block btn-lg pull-xs-right no-radius">Save</button> -->
+    <!-- <button ng-if="!$state.includes('danger')" type="button" class="btn btn-danger hidden-sm-up btn-block btn-lg pull-xs-right no-radius">Delete</button> -->
+
+</div>

@@ -1,0 +1,30 @@
+<br>
+<br>
+<div style="max-width: 700px;">
+    <h3>Privacy</h3>
+    <div class="row choise-container">
+        <h5 class="text-uppercase">people</h5>
+        <nav class="nav nav-inline">
+            <span ng-class="request.people.indexOf('developer') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToPeople('developer')"><span ng-if="request.people.indexOf('developer')==-2"><i class="fa fa-check-circle-o2"></i>&nbsp;</span>Developer</span>
+            <span ng-class="request.people.indexOf('designer') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToPeople('designer')"><span ng-if="request.people.indexOf('designer')==-2"><i class="fa fa-check-circle-o2"></i>&nbsp;</span>Designer</span>
+            <span ng-class="request.people.indexOf('marketing') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToPeople('marketing')"><span ng-if="request.people.indexOf('marketing')==-2"><i class="fa fa-check-circle-o2"></i>&nbsp;</span>Marketing</span>
+            <span ng-class="request.people.indexOf('tester') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToPeople('tester')"><span ng-if="request.people.indexOf('tester')==-2"><i class="fa fa-check-circle-o2"></i>&nbsp;</span>Tester</span>
+        </nav>
+    </div>
+    <div class="row choise-container">
+        <h5 class="text-uppercase">Supply</h5>
+        <nav class="nav nav-inline">
+            <span ng-class="request.supply.indexOf('shelter') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToSupply('shelter')">Shelter</span>
+            <span ng-class="request.supply.indexOf('food') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToSupply('food')">Food</span>
+            <span ng-class="request.supply.indexOf('hardware') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToSupply('hardware')">Hardware</span>
+        </nav>
+    </div>
+    <div class="row choise-container">
+        <h5 class="text-uppercase">Money</h5>
+        <nav class="nav nav-inline">
+            <span ng-class="request.money.indexOf('yes') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToMoney('yes')">Yes. I accept finicial support.</span>
+            <span ng-class="request.money.indexOf('no') == -1 ? '': 'active' " class="nav-link choice" ng-click="addChoiceToMoney('no')">I don't need finicial support now.</span>
+        </nav>
+    </div>
+    <button type="button" class="btn btn-primary hidden-xs-down btn-lg pull-xs-left">Save</button>
+</div>

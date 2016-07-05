@@ -1,0 +1,29 @@
+<div class="setting-page" ng-init="init()">
+
+    <div class="col-sm-4 col-md-3 col-xl-2 col-left hidden-xs-down">
+        <div class="left-section">
+            <ul class="nav">
+                <li ui-sref-active="active" class="nav-item unselectable" ui-sref="profileSetting_general">
+                    <div class="nav-link">general</div>
+                </li>
+                <li ui-sref-active="active" class="nav-item unselectable" ui-sref="profileSetting_request">
+                    <div class="nav-link">requests</div>
+                </li>
+                <li ui-sref-active="active" class="nav-item unselectable" ui-sref="profileSetting_privacy">
+                    <div class="nav-link">privacy</div>
+                </li>
+                <li ui-sref-active="active-danger" class="nav-item unselectable" ui-sref="profileSetting_danger">
+                    <div class="nav-link">danger zone</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-sm-8 col-md-9 col-xl-10">
+            <div class="right-section">
+                <div ui-view="right_section"></div>
+            </div>
+        </div>
+    </div>
+
+</div>

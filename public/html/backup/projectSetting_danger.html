@@ -1,0 +1,17 @@
+<div style="max-width: 700px;">
+    <h5 class="setting-head">Project general infomation</h5>
+    <hr/>
+    <form ng-submit="deleteProject(project.title)">
+        <h5 class="unselectable">To delete project of <span class="inline-code-block-danger selectable">{{project.title}}</span>, type in project's full name.</h5>
+
+        <input class="form-control form-control form-control-dange" ng-model="deleteProjectInput" placeholder="{{project.title}}"/>
+        <br>
+        <h6 ng-if="sameToTheProjectName(project.title)" ng-class="dangerNotified? 'active' : '' ">
+            <span ng-class="dangerNotified? 'active' : '' " class="custom-checkbox-danger-lg" ng-click="dangerNotifty()"><i ng-class="dangerNotified? '' : '' " class="animated fa fa-check"></i></span>
+            &nbsp;
+            <small class="text-danger danger-notify">I know there is no going back once I delete it.</small>
+        </h6>
+        <br ng-if="sameToTheProjectName(project.title)">
+        <button ng-disabled="!okayToDelete(project.title)" type="submit" class="btn btn-danger pull-xs-left text-uppercase">Detele this project</button>
+    </form>
+</div>
