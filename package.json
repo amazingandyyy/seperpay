@@ -4,9 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "gulp",
-    "postinstall": "bower i && gulp build",
-    "clean": "rm -rf node_modules public/bower_components && npm i"
+    "postinstall": "bower i && gulp build"
   },
   "engines": {
     "node": "5.10.1"
