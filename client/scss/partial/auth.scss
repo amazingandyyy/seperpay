@@ -51,7 +51,7 @@
             span.lock.active {
                 opacity: 1;
             }
-            .action-bottom {
+            .action-button {
                 text-transform: uppercase;
                 font-weight: 500;
                 letter-spacing: 1px;
@@ -67,10 +67,10 @@
                 transition: .1s background ease-in-out;
                 cursor: pointer;
             }
-            button.action-bottom:hover {
-                background: #65CFF1;
+            button.action-button:hover {
+                background: $brand-secondary;
             }
-            button.action-bottom:active {
+            button.action-button:active {
                 background: darken(#65CFF1, 10%);
             }
         }
@@ -79,8 +79,14 @@
 @media (min-width: 767px) {
     .auth-page {
         padding-top: 100px;;
-        .action-bottom {
-            border-radius: 4px;
+        text-align: center;
+        .auth-container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+        }
+        button.action-button {
+            border-radius: 5px !important;
         }
     }
 }

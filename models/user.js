@@ -153,7 +153,11 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                         cc: null,
                         bcc: ['amazingandyyy@gmail.com'],
                         subject: 'Installments: please verify the email!',
-                        message: emailVerifiedTemplate('Email verified required!', token),
+                        message: notificationTemplate({
+                            title:'Verify this Email!',
+                            description: `Please click the button to verify this email and coninue to your dashboard.`,
+                            destination: `api/verify/email/${token}`
+                        }),
                         altText: 'plain text'
                     }, function(err, data, res) {
                         if (err) {
@@ -169,15 +173,18 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                         from: process.env.AWS_SES_SENDER,
                         cc: null,
                         bcc: ['amazingandyyy@gmail.com'],
-                        subject: 'You just login Installments!',
-                        message: notificationTemplate('Notification', 'dashboard'),
+                        subject: 'You just login Installments.',
+                        message: notificationTemplate({
+                            title:'Login Notification',
+                            description: `You just logged in installments dashboard at ${moment().format('hh:mm a, MMMM Do YYYY')}.`,
+                            destination: `#/dashboard`
+                        }),
                         altText: 'plain text'
                     }, function(err, data, res) {
                         if (err) {
                             console.log(err);
                             return cb(err, null)
                         }
-
                         cb(null, token)
                     })
                 }
@@ -203,8 +210,12 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                     from: process.env.AWS_SES_SENDER,
                     cc: null,
                     bcc: ['amazingandyyy@gmail.com'],
-                    subject: 'Installments: please verify the email!',
-                    message: emailVerifiedTemplate('welcome!', token),
+                    subject: 'Installments: verify email',
+                    message: notificationTemplate({
+                        title:'Verify this Email!',
+                        description: `Please click the button to verify this email and coninue to your dashboard.`,
+                        destination: `api/verify/email/${token}`
+                    }),
                     altText: 'plain text'
                 }, function(err, data, res) {
                     if (err) {
@@ -219,7 +230,7 @@ userSchema.statics.enterSystem = function(userObj, cb) {
     }).select('+password')
 }
 
-function emailVerifiedTemplate(title, token) {
+function notificationTemplate(data) {
     return `<!DOCTYPE html>
         <html>
         <head>
@@ -231,14 +242,15 @@ function emailVerifiedTemplate(title, token) {
                     text-transform: uppercase;
                     letter-spacing: 1px;
                     cursor: pointer;
-                    padding: 10px 25px;
+                    padding: 15px 50px;
                     border-radius: 4px;
-                    font-size: 0.9em;
-                    font-weight: 300;
+                    font-size: 0.8em;
+                    font-weight: 500;
                     border: none;
                     color: white;
                     background: #04AADC;
                     transition: .1s background ease-in-out;
+                    margin-top: 20px;
                 }
                 .verify:hover {
                     transition: .1s background ease-in-out;
@@ -257,54 +269,9 @@ function emailVerifiedTemplate(title, token) {
                     </g>
                 </svg>
                 <div>
-                    <h1 style="font-weight: 300; text-transform: capitalize">${title}</h1>
-                    <a href="http://localhost:8000/api/verify/email/${token}" target="_blank"><button class="verify">Verify this Email</button></a>
-                </div>
-            </div>
-        </body>
-        </html>`
-}
-
-function notificationTemplate(title, destination) {
-    return `<!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <link href='https://fonts.googleapis.com/css?family=PT+Serif|Lato:300' rel='stylesheet' type='text/css' />
-            <style media="screen">
-                .verify {
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                    cursor: pointer;
-                    padding: 10px 25px;
-                    border-radius: 4px;
-                    font-size: 0.9em;
-                    font-weight: 300;
-                    border: none;
-                    color: white;
-                    background: #04AADC;
-                    transition: .1s background ease-in-out;
-                }
-                .verify:hover {
-                    transition: .1s background ease-in-out;
-                    background: #03528D;
-                }
-            </style>
-        </head>
-
-        <body>
-            <div style="text-align: center; font-weight: 300; font-family: 'Lato', sans-serif; padding-top:30px;">
-                <svg width="30px" viewBox="4979 3649 798 796" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(4979.000000, 3649.000000)">
-                        <rect id="Rectangle-1-Copy-3" fill="#65CFF1" x="0" y="198" width="598" height="598" rx="125"></rect>
-                        <rect id="Rectangle-1-Copy-4" fill="#04AADC" x="200" y="0" width="598" height="598" rx="125"></rect>
-                        <path d="M200,198 L473.003735,198 C542.037266,198 598,253.956065 598,322.996265 L598,598 L324.996265,598 C255.962734,598 200,542.043935 200,473.003735 L200,198 Z" id="Combined-Shape" fill="#00538D"></path>
-                    </g>
-                </svg>
-                <div>
-                    <h1 style="font-weight: 300; text-transform: capitalize">${title}</h1>
-                    <a href="http://localhost:8000/#/${destination}" target="_blank"><button class="verify">Go to my dashboard</button></a>
+                    <h1 style="font-weight: 300; text-transform: capitalize">${data.title}</h1>
+                    <h2 style="font-weight: 300; font-size: 1.1em; color: rgba(0,0,0,0.4); margin-top: 10px;">${data.description}</h2>
+                    <a href="http://localhost:8000/${data.destination}" target="_blank"><button class="verify">Go to my dashboard</button></a>
                 </div>
             </div>
         </body>
