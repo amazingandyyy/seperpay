@@ -71,6 +71,9 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope) {
         }, err => {
             $state.go('home')
         })
+        $scope.verifyPhone = (phone) => {
+            console.log('phone: ', phone);
+        }
 }
 
 

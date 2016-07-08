@@ -34,6 +34,16 @@ var userSchema = new mongoose.Schema({
             default: false
         }
     },
+    phone: {
+        data: {
+            type: String
+        },
+        verified: {
+            type: Boolean,
+            required: true,
+            default: false
+        }
+    },
     password: {
         type: String,
         required: true,

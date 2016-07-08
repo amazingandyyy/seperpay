@@ -4,23 +4,38 @@
         <!-- <h1>Dashboard</h1> -->
     </nav>
     <div class="row">
+        <!-- <div class="col-sm-6">
+                <div class="achenmt-card">
+                    <h1>{{currentUser.email.data}} verify pending</h1>
+                    <h1>Verify Email</h1>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="achenmt-card">Verify your phone number</div>
+            </div> -->
         <div class="col-sm-6 col-md-4">
             <h2 class="title">credibility</h2>
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-success-">Email signed up
-                        <span class="pull-xs-right"><i class="fa fa-check"></i></span>
-                    </a>
-                <a href="#" class="list-group-item list-group-item-warning-">Confirm Email
-                        <span class="pull-xs-right"><i class="fa fa-info"></i></span>
-                    </a>
-                <a href="#" class="list-group-item list-group-item-warning-">Confirm Phone
-                        <span class="pull-xs-right"><i class="fa fa-info"></i></span>
-                    </a>
-                <a href="#" class="list-group-item list-group-item-warning-">Basic information update
-                        <span class="pull-xs-right"><i class="fa fa-info"></i></span>
-                    </a>
+                <a href="" class="list-group-item list-group-item-success-">Email signed up
+                    <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.data)? 'fa-check' : 'fa-info' "></i></span>
+                </a>
+                <a href="" class="list-group-item list-group-item-warning-">Confirm Email
+                    <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.verified)? 'fa-check' : 'fa-info' "></i></span>
+                </a>
+                <a href="" class="list-group-item list-group-item-warning-">Confirm Phone
+                    <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.phone.verified)? 'fa-check' : 'fa-info' "></i></span>
+                    <form ng-submit="verifyPhone(phone)">
+                        <input type="phone" required ng-model="phone">
+                        <button type="submit">Verify</button>
+                    </form>
+                </a>
+                <!-- <a href="#" class="list-group-item list-group-item-warning-">Basic information update
+                    <span class="pull-xs-right"><i class="fa fa-info"></i></span>
+                </a> -->
             </div>
         </div>
+    </div>
+    <!-- <div class="row">
         <hr class="hidden-sm-up small">
         <div class="col-sm-6 col-md-4">
             {{currentUser}}
@@ -30,5 +45,5 @@
         <div class="col-sm-6 col-md-4">
             <button type="button" class="btn-lg btn" ng-click="logout()">Logout</button>
         </div>
-    </div>
+    </div> -->
 </div>
