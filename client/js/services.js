@@ -10,8 +10,8 @@ function Account($http) {
     this.getCurrentUser = () => {
         return $http({
             method: 'GET',
-            url: '/api/users/own'
-        });
+            url: `/api/auth/currentUser`
+        })
     }
     this.getUserData = (uriUserId) => {
         return $http({

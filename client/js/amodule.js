@@ -17,6 +17,8 @@ angular
 
     $stateProvider
         .state(home)
+        .state(authEntrance)
+        .state(dashboard)
         // .state(ppage)
         // .state(ppage_projects)
         // .state(ppage_liked)
@@ -45,6 +47,26 @@ let home = {
         main: {
             templateUrl: '/html/home.html',
             controller: 'homeCtrl'
+        }
+    }
+}
+let authEntrance = {
+    name: 'authEntrance',
+    url: '/entrance',
+    views: {
+        main: {
+            templateUrl: '/html/entrance.html',
+            controller: 'authCtrl'
+        }
+    }
+}
+let dashboard = {
+    name: 'dashboard',
+    url: '/dashboard',
+    views: {
+        main: {
+            templateUrl: '/html/dashboard.html',
+            controller: 'dashboardCtrl'
         }
     }
 }

@@ -12,7 +12,7 @@ let chalk = require('chalk');
 let error = chalk.bold.red;
 
 let PORT = process.env.PORT || 8000;
-const MONGOURL = process.env.MONGOLAB_URI || 'mongodb://localhost/pinchApp';
+const MONGOURL = process.env.MONGOLAB_URI || 'mongodb://localhost/installments';
 
 if (!process.env.JWT_SECRET) {
     console.error(error(`ERROR:  Missing process.env.JWT_SECRET.`));
@@ -35,6 +35,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/testing', require('./routes/testing'));
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
 app.use('/', require('./routes/index'));

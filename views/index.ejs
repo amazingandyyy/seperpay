@@ -2,16 +2,16 @@
 <html>
 
 <head>
-    <title>Projects</title>
+    <title>Installments - beta</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel='shortcut icon' type='image/x-icon' href='assets/favicon.ico' />
     <link href='https://fonts.googleapis.com/css?family=PT+Serif|Lato:100,400,300,700,900' rel='stylesheet' type='text/css' />
     <link href='https://fonts.googleapis.com/css?family=Teko:500,300' rel='stylesheet' type='text/css'>
-<!--
+
     <link href="/bower_components/animate.css/animate.min.css" rel='stylesheet' type='text/css' />
     <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel='stylesheet' type='text/css' />
-    <link href="/bower_components/ng-img-crop/compile/minified/ng-img-crop.css" rel='stylesheet' type='text/css' /> -->
+    <link href="/bower_components/ng-img-crop/compile/minified/ng-img-crop.css" rel='stylesheet' type='text/css' />
 
     <link href='/assets/et-line-font/style.css' rel='stylesheet' type='text/css' />
     <link href='/css/style.css' rel='stylesheet' type='text/css' />
@@ -36,7 +36,7 @@
 
 </head>
 
-<body ng-app='pinchApp' ng-controller="navCtrl" class="constbase">
+<body ng-app='pinchApp' ng-controller="authCtrl" ng-init='getCurrentUser()' class="constbase">
 
     <!-- Navbar -->
     <!-- <nav class="">

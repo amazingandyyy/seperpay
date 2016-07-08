@@ -83,10 +83,10 @@ projestSchema.statics.createOne = function(projectObj, cb) {
             project.save((err, project)=>{
                 if (err) return cb(err);
                 cb(null, project);
-            });
+            })
         })
-    });
-};
+    })
+}
 
 Project = mongoose.model('Project', projestSchema);
 
