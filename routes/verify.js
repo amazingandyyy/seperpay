@@ -15,6 +15,23 @@ router.get('/email/:token', function(req, res) {
         res.render('emailVerified');
     })
 })
-
+router.post('/phone', User.authMiddleware, (req, res) => {
+    if(req.user._id==req.body.userData._id){
+        User.sendPhoneVerify(req.body, (err, data) => {
+            if (err) return console.log('err @sendPhoneVerify: ', err);
+            res.status(err ? 400 : 200).send(err || data)
+        })
+    }
+})
+router.put('/phone', User.authMiddleware, (req, res) => {
+    if(req.user._id==req.body.userData._id && req.user.phone.authyId){
+        console.log('verify AuthyToken')
+        User.verifyAuthyToken(req.body, (err, data) => {
+            if (err) return console.log('err @verifyAuthyToken: ', err);
+            console.log('data: ', data)
+            res.status(err ? 400 : 200).send(err || data)
+        })
+    }
+})
 
 module.exports = router;

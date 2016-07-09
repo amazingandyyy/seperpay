@@ -13,6 +13,7 @@ router.get('/own', User.authMiddleware, (req, res) => {
     // console.log('res.user: ', req.user);
     res.send(req.user);
 })
+
 router.put('/event/follow', User.authMiddleware, (req, res) => {
     if (req.user._id == req.body.currentUser) {
         User.eventFollow(req.body, (err, data) => {

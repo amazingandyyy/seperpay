@@ -64,16 +64,47 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope) {
     console.log('dashboardCtrl loaded')
     Account.getCurrentUser($auth.getToken())
         .then(res => {
-            if(!$rootScope.currentUser){
+            if (!$rootScope.currentUser) {
                 $rootScope.currentUser = res.data
             }
             console.log('res @getCurrentUser: ', res.data)
         }, err => {
             $state.go('home')
         })
-        $scope.verifyPhone = (phone) => {
-            console.log('phone: ', phone);
+
+    $scope.sendVerifyCode = (phone) => {
+        console.log('phone: ', phone)
+        if(phone.length > 5){
+            var userObj = {
+                userData: $scope.currentUser,
+                phone: phone
+            }
+            Account.sendVerifyCode(userObj)
+                .then(res => {
+                    console.log('res @sendVerifyCode: ', res.data)
+                }, err => {
+                    console.log('err @sendVerifyCode: ', err);
+                    // $state.go('home')
+                })
         }
+    }
+    $scope.verifyCode = (code) => {
+        console.log('code: ', code)
+        if(code.length !== 0){
+            var userObj = {
+                userData: $scope.currentUser,
+                code: code
+            }
+            Account.verifyCode(userObj)
+                .then(res => {
+                    console.log('res @verifyCode: ', res.data)
+                }, err => {
+                    console.log('err @verifyCode: ', err);
+            })
+        }
+    }
+
+
 }
 
 

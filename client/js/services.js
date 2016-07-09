@@ -13,6 +13,20 @@ function Account($http) {
             url: `/api/auth/currentUser`
         })
     }
+    this.sendVerifyCode = (userObj) => {
+        return $http({
+            method: 'POST',
+            url: `/api/verify/phone`,
+            data: userObj
+        })
+    }
+    this.verifyCode = (userObj) => {
+        return $http({
+            method: 'PUT',
+            url: `/api/verify/phone`,
+            data: userObj
+        })
+    }
     this.getUserData = (uriUserId) => {
         return $http({
             method: 'GET',
@@ -26,16 +40,8 @@ function Account($http) {
             data: updateUserData
         })
     }
-    this.follow = (currentUser, followTarget) => {
-        return $http({
-            method: 'PUT',
-            url: `/api/users/event/follow`,
-            data: {
-                currentUser: currentUser,
-                followTarget: followTarget
-            }
-        })
-    }
+
+
 }
 
 function Project($http) {

@@ -24,9 +24,13 @@
                 </a>
                 <a href="" class="list-group-item list-group-item-warning-">Confirm Phone
                     <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.phone.verified)? 'fa-check' : 'fa-info' "></i></span>
-                    <form ng-submit="verifyPhone(phone)">
-                        <input type="phone" required ng-model="phone">
-                        <button type="submit">Verify</button>
+                    <form>
+                        <input type="phone" ng-model="phone" placeholder="phone number">
+                        <button type="button" ng-click="sendVerifyCode(phone)">Send me verify code</button>
+                    </form>
+                    <form>
+                        <input type="number" ng-model="code" placeholder="verify code">
+                        <button type="button" ng-click="verifyCode(code)">Verify</button>
                     </form>
                 </a>
                 <!-- <a href="#" class="list-group-item list-group-item-warning-">Basic information update

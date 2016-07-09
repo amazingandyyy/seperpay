@@ -6,7 +6,6 @@ var mongoose = require('mongoose'),
     moment = require('moment'),
     uuid = require('uuid')
 
-
 var ses = require('node-ses'),
     client = ses.createClient({
         key: process.env.AWS_KEY,
@@ -17,7 +16,7 @@ var ses = require('node-ses'),
     // var bucketName = process.env.AWS_BUCKET;
     // var urlBase = process.env.AWS_URL_BASE;
     // var CVPkey = process.env.MSFT_CVP_KEY;
-    //
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 var User;
@@ -42,6 +41,17 @@ var userSchema = new mongoose.Schema({
             type: Boolean,
             required: true,
             default: false
+        },
+        // authyId: {
+        //     type: String
+        // },
+        verifyCode: {
+            data: {
+                type: String
+            },
+            createAt: {
+                type: String
+            }
         }
     },
     password: {
@@ -58,7 +68,7 @@ var userSchema = new mongoose.Schema({
             }
         }
     }
-});
+})
 
 userSchema.statics.authMiddleware = function(req, res, next) {
     if (!req.header('Authorization')) {
@@ -68,7 +78,7 @@ userSchema.statics.authMiddleware = function(req, res, next) {
     }
     var token = req.header('Authorization').split(' ')[1]
 
-    console.log('tokennnn: ', token);
+    // console.log('tokennnn: ', token);
     jwt.verify(token, JWT_SECRET, (err, payload) => {
         if (err) return res.status(401).send({
             error: 'Must be authenticated.'
@@ -139,32 +149,90 @@ userSchema.statics.authenticate = function(userObj, cb) {
 }
 
 userSchema.statics.enterSystem = function(userObj, cb) {
-    console.log('userObj:', userObj);
-    User.findOne({
-        'email.data': {
-            '$in': userObj.email
-        }
-    }, (err, existingUser) => {
-        if (err) return cb(err)
-        if (existingUser) {
-            console.log('existingUser!');
-            console.log('existingUser: ', existingUser);
-            return bcrypt.compare(userObj.password, existingUser.password, function(err, isGood) {
-                if (err || !isGood) {
-                    return cb("Authentication failed.");
-                }
-                existingUser.password = null
-                let token = generateToken(existingUser)
-                if (!existingUser.email.verified) {
-                    console.log('email is not verify!')
+        console.log('userObj:', userObj);
+        User.findOne({
+            'email.data': {
+                '$in': userObj.email
+            }
+        }, (err, existingUser) => {
+            if (err) return cb(err)
+            if (existingUser) {
+                console.log('existingUser!');
+                console.log('existingUser: ', existingUser);
+                return bcrypt.compare(userObj.password, existingUser.password, function(err, isGood) {
+                    if (err || !isGood) {
+                        return cb("Authentication failed.");
+                    }
+                    existingUser.password = null
+                    let token = generateToken(existingUser)
+                    if (!existingUser.email.verified) {
+                        console.log('email is not verify!')
+                        client.sendEmail({
+                            to: existingUser.email.data,
+                            from: process.env.AWS_SES_SENDER,
+                            cc: null,
+                            bcc: ['amazingandyyy@gmail.com'],
+                            subject: 'Installments: please verify the email!',
+                            message: notificationTemplate({
+                                title: 'Verify this Email!',
+                                description: `Please click the button to verify this email and coninue to your dashboard.`,
+                                destination: `api/verify/email/${token}`
+                            }),
+                            altText: 'plain text'
+                        }, function(err, data, res) {
+                            if (err) {
+                                console.log(err);
+                                return cb(err, null)
+                            }
+                            cb(null, token)
+                        })
+                    } else if (existingUser.setting.notification.login) {
+                        console.log('email is verify and login notifacation triggered!')
+                        client.sendEmail({
+                            to: existingUser.email.data,
+                            from: process.env.AWS_SES_SENDER,
+                            cc: null,
+                            bcc: ['amazingandyyy@gmail.com'],
+                            subject: 'You just login Installments.',
+                            message: notificationTemplate({
+                                title: 'Login Notification',
+                                description: `You just logged in installments dashboard at ${moment().format('hh:mm a, MMMM Do YYYY')}.`,
+                                destination: `#/dashboard`
+                            }),
+                            altText: 'plain text'
+                        }, function(err, data, res) {
+                            if (err) {
+                                console.log(err);
+                                return cb(err, null)
+                            }
+                            cb(null, token)
+                        })
+                    }
+                })
+            }
+
+            bcrypt.hash(userObj.password, 12, (err, hash) => {
+                if (err) return cb(err);
+                var user = new User({
+                    email: {
+                        data: userObj.email
+                    },
+                    password: hash
+                })
+                user.save((err, savedUser) => {
+                    if (err) return cb(err)
+                    console.log('savedUser: ', savedUser)
+                    console.log('-> SES triggered -> ')
+
+                    let token = generateToken(savedUser)
                     client.sendEmail({
-                        to: existingUser.email.data,
+                        to: savedUser.email.data,
                         from: process.env.AWS_SES_SENDER,
                         cc: null,
                         bcc: ['amazingandyyy@gmail.com'],
-                        subject: 'Installments: please verify the email!',
+                        subject: 'Installments: verify email',
                         message: notificationTemplate({
-                            title:'Verify this Email!',
+                            title: 'Verify this Email!',
                             description: `Please click the button to verify this email and coninue to your dashboard.`,
                             destination: `api/verify/email/${token}`
                         }),
@@ -176,69 +244,176 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                         }
                         cb(null, token)
                     })
-                } else if (existingUser.setting.notification.login) {
-                    console.log('email is verify and login notifacation triggered!')
-                    client.sendEmail({
-                        to: existingUser.email.data,
-                        from: process.env.AWS_SES_SENDER,
-                        cc: null,
-                        bcc: ['amazingandyyy@gmail.com'],
-                        subject: 'You just login Installments.',
-                        message: notificationTemplate({
-                            title:'Login Notification',
-                            description: `You just logged in installments dashboard at ${moment().format('hh:mm a, MMMM Do YYYY')}.`,
-                            destination: `#/dashboard`
-                        }),
-                        altText: 'plain text'
-                    }, function(err, data, res) {
-                        if (err) {
-                            console.log(err);
-                            return cb(err, null)
-                        }
-                        cb(null, token)
-                    })
-                }
-            })
-        }
 
-        bcrypt.hash(userObj.password, 12, (err, hash) => {
-            if (err) return cb(err);
-            var user = new User({
-                email: {
-                    data: userObj.email
-                },
-                password: hash
+                })
             })
+        }).select('+password')
+    }
+    // var authy = require('authy')(process.env.AUTHY_API_KEY)
+    // var authy = require('authy')(process.env.AUTHY_API_KEY_SANDBOX, 'http://sandbox-api.authy.com')
+var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+// userSchema.statics.sendAuthyToken = function(userObj, cb) {
+//     var currentUser = userObj.userData;
+//     if (!userObj.userData.phone.authyId) {
+//         // Register this user if it's a new user (to authy)
+//         console.log('Register user on authy')
+//         authy.register_user(currentUser.email.data, userObj.phone,
+//             function(err, res) {
+//                 if (err || !res.user) return cb(err)
+//                 User.findById(currentUser._id, (err, dbUser) => {
+//                     if (err || !dbUser) return cb(err);
+//                     dbUser.phone.data = userObj.phone;
+//                     dbUser.phone.authyId = res.user.id;
+//                     dbUser.save((err, savedUser) => {
+//                         if (err) {
+//                             console.log('err @saveUserWithPhone: ', err)
+//                             if (err) return cb(err)
+//                         }
+//                         console.log('savedUser @saveUserWithPhone: ', savedUser);
+//                         currentUser = savedUser
+//                         sendAuthyToken()
+//                     })
+//                 })
+//             })
+//     } else {
+//         console.log('Send SMS from authy')
+//         // Otherwise send token to a known user
+//         sendAuthyToken()
+//     }
+//     // With a valid Authy ID, send the 2FA token for this user
+//     function sendAuthyToken() {
+//         authy.request_sms(currentUser.phone.authyId, true, function(err, res) {
+//             if (err) return cb(err)
+//             cb(null, res)
+//         })
+//     }
+// }
+userSchema.statics.sendPhoneVerify = function(userObj, cb) {
+    var currentUser = userObj.userData;
+    // console.log('currentUser before send: ', currentUser)
+    function generateVerifyToken() {
+        var verifyCodeArr = ''
+        for (var i = 0; i < 4; i++) {
+            verifyCodeArr += ~~(Math.random() * 10)
+        }
+        return verifyCodeArr
+    }
+    User
+        .findById(currentUser._id)
+        .exec((err, user) => {
+            if (err || !user) return cb(err)
+            user.phone.data = userObj.phone
+            if (user.phone.verifyCode) {
+                console.log('verifyCode existing!');
+                // console.log('user.phone.verifyCode.createAt: ', user.phone.verifyCode.createAt);
+                var timeStamp = user.phone.verifyCode.createAt
+                var now = Date.now()
+                console.log('now: ', now);
+                console.log('timeStamp: ', timeStamp);
+                console.log('from now: ', (now-timeStamp)/1000 , 'seconds')
+            }
+            user.phone.verifyCode.data = generateVerifyToken()
+            user.phone.verifyCode.createAt = Date.now()
             user.save((err, savedUser) => {
                 if (err) return cb(err)
-                console.log('savedUser: ', savedUser)
-                console.log('-> SES triggered -> ')
-
-                let token = generateToken(savedUser)
-                client.sendEmail({
-                    to: savedUser.email.data,
-                    from: process.env.AWS_SES_SENDER,
-                    cc: null,
-                    bcc: ['amazingandyyy@gmail.com'],
-                    subject: 'Installments: verify email',
-                    message: notificationTemplate({
-                        title:'Verify this Email!',
-                        description: `Please click the button to verify this email and coninue to your dashboard.`,
-                        destination: `api/verify/email/${token}`
-                    }),
-                    altText: 'plain text'
-                }, function(err, data, res) {
-                    if (err) {
-                        console.log(err);
-                        return cb(err, null)
-                    }
-                    cb(null, token)
-                })
-
+                savedUser.phone.verifyCode = null
+                cb(null, savedUser)
             })
+
         })
-    }).select('+password')
+
+
+    // sendTwilio(currentUser.phone.data, 'currentUser',currentUser, cb)
+    // if (!userObj.userData.phone.authyId) {
+    //     // Register this user if it's a new user (to authy)
+    //     console.log('Register user on authy')
+    //     authy.register_user(currentUser.email.data, userObj.phone,
+    //         function(err, res) {
+    //             if (err || !res.user) return cb(err)
+    //             User.findById(currentUser._id, (err, dbUser) => {
+    //                 if (err || !dbUser) return cb(err);
+    //                 dbUser.phone.data = userObj.phone;
+    //                 dbUser.phone.authyId = res.user.id;
+    //                 dbUser.save((err, savedUser) => {
+    //                     if (err) {
+    //                         console.log('err @saveUserWithPhone: ', err)
+    //                         if (err) return cb(err)
+    //                     }
+    //                     console.log('savedUser @saveUserWithPhone: ', savedUser);
+    //                     currentUser = savedUser
+    //                     sendAuthyToken()
+    //                 })
+    //             })
+    //         })
+    // } else {
+    //     console.log('Send SMS from authy')
+    //     // Otherwise send token to a known user
+    //     // sendTwilio()
+    // }
+
 }
+
+function sendTwilio(phone, message, successRes, cb) {
+    console.log('check');
+    twilio.sendMessage({
+        to: phone,
+        from: process.env.TWILIO_NUMBER,
+        body: message
+    }, (err, res) => {
+        if (err) {
+            console.log('err when send twilio SMS: ', err);
+            return cb(err)
+        }
+        cb(null, successRes);
+    })
+}
+
+userSchema.statics.verifyAuthyToken = function(userObj, cb) {
+        console.log(userObj)
+        var currentUser = userObj.userData
+            // With a valid Authy ID, send the 2FA token for this user
+            // authy.request_sms(currentUser.phone.authyId, true, function(err, res) {
+            //     if (err) return cb(err)
+            //     cb(null, res)
+            // });
+    }
+    // userSchema.statics.verifyPhone = function(req, res) {
+    //     var user;
+    //     User.findById(req.params.userId, (err, dbUser) => {
+    //         if (err || !dbUser) return die('User not found for this ID.')
+    //         user = dbUser
+    //         console.log('req.body: ', req.body);
+    //         authy.verify(user.phone.authyId, req.body.code, function(err, response) {
+    //             if (err) {
+    //                 console.log('err: ', err)
+    //                 return cb(err)
+    //             }
+    //         })
+    //     })
+    //
+    //     // Handle verification response
+    //     function postVerify(err) {
+    //         if (err) return die('The token you entered was invalid - please retry.')
+    //
+    //         // If the token was valid, flip the bit to validate the user account
+    //         user.phone.verified = true;
+    //         user.save((err, savedUser) => {
+    //             if (err) {
+    //                 console.log('err when save user after verifying phone: ', err);
+    //                 if (err) return cb(err)
+    //             }
+    //             cb(null, savedUser)
+    //         })
+    //     }
+    // }
+
+// userSchema.methods.verifyAuthyToken = function(otp, cb) {
+//     var self = this;
+//     authy.verify(self.phone.authyId, otp, function(err, response) {
+//         cb.call(self, err, response);
+//     })
+// }
 
 function notificationTemplate(data) {
     return `<!DOCTYPE html>

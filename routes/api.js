@@ -9,8 +9,6 @@ router.get('/', function(req, res) {
 
 router.use('/auth', require('./auth'));
 router.use('/users', require('./users'));
-router.use('/projects', require('./projects'));
-router.use('/upload', require('./upload'));
 router.use('/verify', require('./verify'));
 
 module.exports = router;
