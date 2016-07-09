@@ -24,8 +24,8 @@ router.post('/phone', User.authMiddleware, (req, res) => {
     }
 })
 router.put('/phone', User.authMiddleware, (req, res) => {
-    if(req.user._id==req.body.userData._id && req.user.phone.authyId){
-        console.log('verify AuthyToken')
+    if(req.user._id==req.body.userData._id){
+        console.log('verify phone verification code')
         User.verifyAuthyToken(req.body, (err, data) => {
             if (err) return console.log('err @verifyAuthyToken: ', err);
             console.log('data: ', data)

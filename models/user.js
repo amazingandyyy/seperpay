@@ -47,9 +47,6 @@ var userSchema = new mongoose.Schema({
                 type: String,
                 select: false
             },
-            createAt: {
-                type: String
-            },
             expiredAt: {
                 type: String
             }
@@ -265,30 +262,35 @@ userSchema.statics.sendPhoneVerify = function(userObj, cb) {
     }
     User
         .findById(currentUser._id)
-        .select('phone verifyCode data')
+        .select('+phone.verifyCode.data')
         .exec((err, user) => {
+            console.log('user data when verify the code: ', user);
             if (err || !user) return cb(err)
-            console.log('user: ', user);
+            if (user.phone.verified) {
+                // if the user's phone is already verified, then ignore this request
+                // -> send back some user data
+                return cb(null, user)
+            }
             user.phone.data = userObj.phone // change user's phone Number as they type in
             var now = Date.now()
             if (user.phone.verifyCode.expiredAt > now) {
-                var diff = (user.phone.verifyCode.expiredAt - now) / 1000
-                console.log(`${diff} secs left, it\'s still a good code: `, user.phone.verifyCode.data)
-                    // code is still good
-                user.phone.verifyCode.data = null
+                // code is still good
+                console.log(`${(user.phone.verifyCode.expiredAt - now) / 1000} secs left, it\'s still a good code: `, user.phone.verifyCode.data)
+                user.phone.verifyCode.data = null //hide the code before making the successful callback
+                console.log('user: ', user)
                 return cb(null, user)
             }
             console.log('code expired or code does not exist');
             // code expired or code does not exist
             // -> send verify code to user
-            user.phone.verifyCode.data = generateVerifyToken()
+            var code = generateVerifyToken()
+            user.phone.verifyCode.data = code
             user.phone.verifyCode.expiredAt = Date.now() + (1000 * 300) // expire in 5 minutes
             user.save((err, savedUser) => {
                 if (err) return cb(err)
-                var number = savedUser.phone.data
-                var code = savedUser.phone.data
-                savedUser.phone.verifyCode.data = null
-                sendTwilio(number, `Your verify code for installments is ${code}`, savedUser, cb)
+                savedUser.phone.verifyCode.data = null // hide the code before making the successful callback
+                console.log('savedUser: ', savedUser);
+                sendTwilio(savedUser.phone.data, `Your verify code for installments is ${code}`, savedUser, cb)
             })
 
         })
@@ -310,50 +312,55 @@ function sendTwilio(phone, message, successRes, cb) {
 }
 
 userSchema.statics.verifyAuthyToken = function(userObj, cb) {
-        console.log(userObj)
-        var currentUser = userObj.userData
-            // With a valid Authy ID, send the 2FA token for this user
-            // authy.request_sms(currentUser.phone.authyId, true, function(err, res) {
-            //     if (err) return cb(err)
-            //     cb(null, res)
-            // });
-    }
-    // userSchema.statics.verifyPhone = function(req, res) {
-    //     var user;
-    //     User.findById(req.params.userId, (err, dbUser) => {
-    //         if (err || !dbUser) return die('User not found for this ID.')
-    //         user = dbUser
-    //         console.log('req.body: ', req.body);
-    //         authy.verify(user.phone.authyId, req.body.code, function(err, response) {
-    //             if (err) {
-    //                 console.log('err: ', err)
-    //                 return cb(err)
-    //             }
-    //         })
-    //     })
-    //
-    //     // Handle verification response
-    //     function postVerify(err) {
-    //         if (err) return die('The token you entered was invalid - please retry.')
-    //
-    //         // If the token was valid, flip the bit to validate the user account
-    //         user.phone.verified = true;
-    //         user.save((err, savedUser) => {
-    //             if (err) {
-    //                 console.log('err when save user after verifying phone: ', err);
-    //                 if (err) return cb(err)
-    //             }
-    //             cb(null, savedUser)
-    //         })
-    //     }
-    // }
-
-// userSchema.methods.verifyAuthyToken = function(otp, cb) {
-//     var self = this;
-//     authy.verify(self.phone.authyId, otp, function(err, response) {
-//         cb.call(self, err, response);
-//     })
-// }
+    let userId = userObj.userData._id
+    let code = userObj.code
+    User
+        .findById(userId)
+        .select('+phone.verifyCode.data')
+        .exec((err, dbUser) => {
+            if (err || !dbUser) {
+                return res.status(400).send(err || {
+                    error: 'User not found.'
+                })
+            }
+            console.log('dbUser: ', dbUser);
+            var now = Date.now()
+            if (dbUser.phone.verified) {
+                return cb(null, {
+                    msg: "good enough",
+                    dbUser: dbUser
+                })
+            }
+            if (dbUser.phone.verifyCode.expiredAt < now) {
+                // code is expired
+                return cb(null, {
+                    msg: "expired"
+                })
+            }
+            // code is not expired
+            if (code == dbUser.phone.verifyCode.data) {
+                console.log('not expired and matched!');
+                // codes are the same
+                // -> set user's phone verified to true
+                dbUser.phone.verified = true
+                dbUser.save((err, savedUser) => {
+                    if (err) return cb(err)
+                    console.log(savedUser)
+                    sendTwilio(savedUser.phone.data, `Big congrats! Your phone, ${savedUser.phone.data} is now successfully verified! Login dashboard to create a plan: ${process.env.SITE_CURRENT_URL}`, savedUser, cb)
+                    return cb(null, savedUser)
+                })
+            }
+            console.log('not expired but not matched!')
+            cb(null, {
+                msg: "incorrect"
+            })
+        })
+        // With a valid Authy ID, send the 2FA token for this user
+        // authy.request_sms(currentUser.phone.authyId, true, function(err, res) {
+        //     if (err) return cb(err)
+        //     cb(null, res)
+        // });
+}
 
 function notificationTemplate(data) {
     return `<!DOCTYPE html>
