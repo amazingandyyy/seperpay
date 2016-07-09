@@ -3,51 +3,10 @@
         <img class="logo" src="/assets/images/logo-color.svg">
         <!-- <h1>Dashboard</h1> -->
     </nav>
-    <div class="row">
-        <!-- <div class="col-sm-6">
-                <div class="achenmt-card">
-                    <h1>{{currentUser.email.data}} verify pending</h1>
-                    <h1>Verify Email</h1>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="achenmt-card">Verify your phone number</div>
-            </div> -->
-        <div class="col-sm-6 col-md-4">
-            <h2 class="title">credibility</h2>
-            <div class="list-group">
-                <a href="" class="list-group-item list-group-item-success-">Email signed up
-                    <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.data)? 'fa-check' : 'fa-info' "></i></span>
-                </a>
-                <a href="" class="list-group-item list-group-item-warning-">Confirm Email
-                    <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.verified)? 'fa-check' : 'fa-info' "></i></span>
-                </a>
-                <a href="" class="list-group-item list-group-item-warning-">Confirm Phone
-                    <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.phone.verified)? 'fa-check' : 'fa-info' "></i></span>
-                    <form>
-                        <input type="phone" ng-model="phone" placeholder="phone number">
-                        <button type="button" ng-click="sendVerifyCode(phone)">Send me verify code</button>
-                    </form>
-                    <form>
-                        <input type="number" ng-model="code" placeholder="verify code">
-                        <button type="button" ng-click="verifyCode(code)">Verify</button>
-                    </form>
-                </a>
-                <!-- <a href="#" class="list-group-item list-group-item-warning-">Basic information update
-                    <span class="pull-xs-right"><i class="fa fa-info"></i></span>
-                </a> -->
-            </div>
-        </div>
+    <div class="menu">
+        <div class="menu-item" ui-sref-active="active" ui-sref="dashboard_payment">Payment</div>
+        <div class="menu-item" ui-sref-active="active" ui-sref="dashboard_plan">Plan</div>
+        <div class="menu-item" ui-sref-active="active" ui-sref="dashboard_account">Account</div>
     </div>
-    <!-- <div class="row">
-        <hr class="hidden-sm-up small">
-        <div class="col-sm-6 col-md-4">
-            {{currentUser}}
-            <h2 class="title">plan</h2>
-            <button type="button" class="btn-lg btn">Create a plan</button>
-        </div>
-        <div class="col-sm-6 col-md-4">
-            <button type="button" class="btn-lg btn" ng-click="logout()">Logout</button>
-        </div>
-    </div> -->
+    <div ui-view="dashboard_section" class="dashboard-section"></div>
 </div>

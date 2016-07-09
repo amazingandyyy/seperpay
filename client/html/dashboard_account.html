@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <h2 class="title">verification</h2>
+        <div class="list-group">
+            <a href="" class="list-group-item list-group-item-success-">Email signed up
+                <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.data)? 'fa-check' : 'fa-info' "></i></span>
+            </a>
+            <a href="" class="list-group-item list-group-item-warning-">Confirm Email
+                <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.verified)? 'fa-check' : 'fa-info' "></i></span>
+            </a>
+            <a href="" class="list-group-item list-group-item-warning-">Confirm Phone
+                <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.phone.verified)? 'fa-check' : 'fa-info' "></i></span>
+                <div ng-if="!currentUser.phone.verified">
+                    <form>
+                        <input type="phone" ng-model="phone" placeholder="phone number">
+                        <button type="button" ng-click="sendVerifyCode(phone)" class="btn">Send me verify code</button>
+                    </form>
+                    <form>
+                        <input type="number" ng-model="code" placeholder="verify code">
+                        <button type="button" ng-click="verifyCode(code)" class="btn">Verify</button>
+                    </form>
+                </div>
+            </a>
+        </div>
+        <br>
+        <button type="button" class="btn-lg btn btn-block btn-primary" ng-click="logout()">Logout</button>
+    </div>
+    <div class="col-sm-3"></div>
+</div>

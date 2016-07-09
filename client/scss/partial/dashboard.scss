@@ -1,13 +1,12 @@
 @import "../myvariables";
-
 .dashboard-page {
-    padding: 60px 15px;
+    padding: 100px 15px;
     nav {
         transition: 0.2s all ease-in-out;
         padding: 5px 10px;
         width: 100%;
-        top: 0px;
-        right: 0px;
+        top: 0;
+        right: 0;
         position: absolute;
         background-color: rgba(255,255,255,1);
         z-index: 99;
@@ -18,19 +17,48 @@
             margin: auto;
             width: 30px;
             transition: 0.3s all ease-in-out;
-            margin-right: 10px;
-            // float: left;
         }
-        h1{
+        h1 {
             float: left;
             text-transform: capitalize;
-            margin: 0px;
+            margin: 0;
             font-weight: 300;
             color: rgba(0,0,0,0.5);
             font-size: 140%;
         }
     }
-    h2.title{
+    .menu {
+        position: absolute;
+        top: 41px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        z-index: 99;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 0.9;
+        letter-spacing: 0.5px;
+        color: rgba(0,0,0,0.3);
+        font-weight: 600;
+        .menu-item {
+            cursor: pointer;
+            width: 33.333%;
+            text-align: center;
+            padding: 5px 20px;
+            transition: 0.1 color ease-in-out;
+            &:hover {
+                color: rgba(0,0,0,0.8)
+            }
+            &.active{
+                color: rgba(0,0,0,0.8)
+            }
+        }
+    }
+    h2.title {
         font-size: 100%;
         text-transform: uppercase;
         color: rgba(0,0,0,0.4);
@@ -48,7 +76,7 @@
             background: white;
             border-radius: 4px;
             padding: 10px 20px;
-            &:hover{
+            &:hover {
                 background: rgba(0,0,0,0.03);
             }
         }
@@ -56,10 +84,14 @@
 }
 @media (min-width: 767px) {
     .dashboard-page {
+        .menu {
+            .menu-item {
+                width: 15%;
+                max-width: 150px;
+            }
+        }
     }
 }
 @media (max-width: 767px) {
-    .dashboard-page {
-
-    }
+    .dashboard-page {}
 }

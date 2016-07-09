@@ -65,7 +65,21 @@ var userSchema = new mongoose.Schema({
                 default: true
             }
         }
-    }
+    },
+    payment: [{
+        event: {
+            state: {
+                type: String
+            },
+            createAt: {
+                type: String,
+                default: Date.now()
+            },
+            details: {
+                type: Object
+            }
+        }
+    }]
 })
 
 userSchema.statics.authMiddleware = function(req, res, next) {
@@ -311,56 +325,6 @@ function sendTwilio(phone, message, successRes, cb) {
     })
 }
 
-userSchema.statics.verifyAuthyToken = function(userObj, cb) {
-    let userId = userObj.userData._id
-    let code = userObj.code
-    User
-        .findById(userId)
-        .select('+phone.verifyCode.data')
-        .exec((err, dbUser) => {
-            if (err || !dbUser) {
-                return res.status(400).send(err || {
-                    error: 'User not found.'
-                })
-            }
-            console.log('dbUser: ', dbUser);
-            var now = Date.now()
-            if (dbUser.phone.verified) {
-                return cb(null, {
-                    msg: "good enough",
-                    dbUser: dbUser
-                })
-            }
-            if (dbUser.phone.verifyCode.expiredAt < now) {
-                // code is expired
-                return cb(null, {
-                    msg: "expired"
-                })
-            }
-            // code is not expired
-            if (code == dbUser.phone.verifyCode.data) {
-                console.log('not expired and matched!');
-                // codes are the same
-                // -> set user's phone verified to true
-                dbUser.phone.verified = true
-                dbUser.save((err, savedUser) => {
-                    if (err) return cb(err)
-                    console.log(savedUser)
-                    sendTwilio(savedUser.phone.data, `Big congrats! Your phone, ${savedUser.phone.data} is now successfully verified! Login dashboard to create a plan: ${process.env.SITE_CURRENT_URL}`, savedUser, cb)
-                    return cb(null, savedUser)
-                })
-            }
-            console.log('not expired but not matched!')
-            cb(null, {
-                msg: "incorrect"
-            })
-        })
-        // With a valid Authy ID, send the 2FA token for this user
-        // authy.request_sms(currentUser.phone.authyId, true, function(err, res) {
-        //     if (err) return cb(err)
-        //     cb(null, res)
-        // });
-}
 
 function notificationTemplate(data) {
     return `<!DOCTYPE html>
@@ -409,48 +373,127 @@ function notificationTemplate(data) {
         </body>
         </html>`
 }
-// userSchema.statics.updateProfilePhoto = function(data, cb) {
-//     var userId = data.userId;
-//     var file = data.file;
-//     if (!file.mimetype.match(/image/)) {
-//         return cb({
-//             error: 'File must be image'
-//         })
-//     }
-//     let filenameParts = file.originalname.split('.');
-//     let ext;
-//     if (filenameParts.length > 1) {
-//         ext = "." + filenameParts.pop();
-//     } else {
-//         ext = '';
-//     }
-//
-//     let key = `${uuid.v4()}${ext}`;
-//
-//     let params = {
-//         Bucket: bucketName,
-//         Key: key,
-//         ACL: 'public-read-write',
-//         Body: file.buffer
-//     }
-//     s3.putObject(params, (err, result) => {
-//         if (err) return cb(err);
-//         console.log('result from aws s3: ', result);
-//         let imageUrl = `${urlBase}/${bucketName}/${key}`;
-//
-//         User.findById(userId, (err, user) => {
-//             if (err) return cb(err);
-//             user.profilePicture = imageUrl;
-//             user.save((err, savedUser) => {
-//                 if (err) {
-//                     console.log('err when save user after updating profilePhoto: ', err);
-//                     if (err) return cb(err);
-//                 }
-//                 cb(null, savedUser);
-//             });
-//         })
-//     });
-// };
+
+userSchema.statics.verifyAuthyToken = function(userObj, cb) {
+    let userId = userObj.userData._id
+    let code = userObj.code
+    User
+        .findById(userId)
+        .select('+phone.verifyCode.data')
+        .exec((err, dbUser) => {
+            if (err || !dbUser) {
+                return res.status(400).send(err || {
+                    error: 'User not found.'
+                })
+            }
+            console.log('dbUser: ', dbUser);
+            var now = Date.now()
+            if (dbUser.phone.verified) {
+                return cb(null, {
+                    msg: "It's already been verified!",
+                    dbUser: dbUser
+                })
+            }
+            if (dbUser.phone.verifyCode.expiredAt < now) {
+                // code is expired
+                return cb(null, {
+                    msg: "expired"
+                })
+            }
+            // code is not expired
+            if (code == dbUser.phone.verifyCode.data) {
+                console.log('not expired and matched!');
+                // codes are the same
+                // -> set user's phone verified to true
+                dbUser.phone.verified = true
+                dbUser.save((err, savedUser) => {
+                    if (err) return cb(err)
+                    console.log(savedUser)
+                    sendTwilio(savedUser.phone.data, `Big congrats! Your phone, ${savedUser.phone.data} is now successfully verified! Login dashboard to create a plan: ${process.env.SITE_CURRENT_URL}`, savedUser, cb)
+                    return cb(null, savedUser)
+                })
+            }
+            console.log('not expired but not matched!')
+            cb(null, {
+                msg: "incorrect"
+            })
+        })
+        // With a valid Authy ID, send the 2FA token for this user
+        // authy.request_sms(currentUser.phone.authyId, true, function(err, res) {
+        //     if (err) return cb(err)
+        //     cb(null, res)
+        // });
+}
+
+var stripe = require('stripe')(process.env.STRIPE_API_SECRET)
+
+userSchema.statics.chargedNow = function(dataObj, cb) {
+        // console.log('dataObj: ', dataObj)
+        console.log(dataObj.stripeToken.id);
+        console.log(dataObj.userData._id);
+        // User
+        //     .findById(payload._id)
+        //     .exec((err, user) => {
+        //         if (err || !user) {
+        //             return res.status(400).send(err || {
+        //                 error: 'User not found.'
+        //             })
+        //         }
+        //         user.email.verified = true
+        //         user.save((err, savedUser) => {
+        //             if (err) return cb(err)
+        //             cb(null, savedUser)
+        //         })
+        //     })
+        stripe.charges.create({
+            amount: 50*100,
+            currency: "usd",
+            source: dataObj.stripeToken.id,
+            description: `payment verification for ${dataObj.userData._id}!`
+        }, cb)
+    }
+    // userSchema.statics.updateProfilePhoto = function(data, cb) {
+    //     var userId = data.userId;
+    //     var file = data.file;
+    //     if (!file.mimetype.match(/image/)) {
+    //         return cb({
+    //             error: 'File must be image'
+    //         })
+    //     }
+    //     let filenameParts = file.originalname.split('.');
+    //     let ext;
+    //     if (filenameParts.length > 1) {
+    //         ext = "." + filenameParts.pop();
+    //     } else {
+    //         ext = '';
+    //     }
+    //
+    //     let key = `${uuid.v4()}${ext}`;
+    //
+    //     let params = {
+    //         Bucket: bucketName,
+    //         Key: key,
+    //         ACL: 'public-read-write',
+    //         Body: file.buffer
+    //     }
+    //     s3.putObject(params, (err, result) => {
+    //         if (err) return cb(err);
+    //         console.log('result from aws s3: ', result);
+    //         let imageUrl = `${urlBase}/${bucketName}/${key}`;
+    //
+    //         User.findById(userId, (err, user) => {
+    //             if (err) return cb(err);
+    //             user.profilePicture = imageUrl;
+    //             user.save((err, savedUser) => {
+    //                 if (err) {
+    //                     console.log('err when save user after updating profilePhoto: ', err);
+    //                     if (err) return cb(err);
+    //                 }
+    //                 cb(null, savedUser);
+    //             });
+    //         })
+    //     });
+    // };
 
 User = mongoose.model('User', userSchema);
 module.exports = User;

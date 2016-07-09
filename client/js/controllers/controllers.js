@@ -60,7 +60,7 @@ function authCtrl($scope, $auth, $state, Account) {
 
 }
 
-function dashboardCtrl($scope, $auth, $state, Account, $rootScope) {
+function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
     console.log('dashboardCtrl loaded')
     Account.getCurrentUser($auth.getToken())
         .then(res => {
@@ -102,6 +102,20 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope) {
                     console.log('err @verifyCode: ', err);
             })
         }
+    }
+
+    $scope.doCheckout = (token) => {
+        console.log('fff');
+        console.log('token: ' ,token);
+        var dataObj = {
+            stripeToken: token,
+            userData: $scope.currentUser
+        }
+        Payment.chargeNow(dataObj).then(res=>{
+            console.log('res: ', res.data);
+        }, function(err){
+            console.log('err: ', err);
+        })
     }
 
 

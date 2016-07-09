@@ -3,7 +3,7 @@
 angular
     .module('pinchApp')
     .service('Account', Account)
-    .service('Project', Project)
+    .service('Payment', Payment)
     .factory('focus', focus)
 
 function Account($http) {
@@ -40,50 +40,14 @@ function Account($http) {
             data: updateUserData
         })
     }
-
-
 }
 
-function Project($http) {
-    this.createOne = (newPojectObj) => {
+function Payment($http){
+    this.chargeNow = (dataObj) => {
         return $http({
             method: 'POST',
-            url: '/api/projects/',
-            data: newPojectObj
-        })
-    }
-    this.getAll = () => {
-        return $http({
-            method: 'GET',
-            url: '/api/projects/all'
-        })
-    }
-    this.getOnePorject = (projectId) => {
-        return $http({
-            method: 'GET',
-            url: `/api/projects/${projectId}`
-        })
-    }
-    this.deleteOne = (projectId) => {
-        return $http({
-            method: 'DELETE',
-            url: `/api/projects/${projectId}`
-        })
-    }
-    this.deleteOne = (projectId) => {
-        return $http({
-            method: 'DELETE',
-            url: `/api/projects/${projectId}`
-        })
-    }
-    this.like = (projectId, likerId) => {
-        return $http({
-            method: 'PUT',
-            url: `/api/projects/event/like`,
-            data: {
-                projectId: projectId,
-                likerId: likerId
-            }
+            url: `/api/payment/chargeNow`,
+            data: dataObj
         })
     }
 }

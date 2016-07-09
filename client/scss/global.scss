@@ -6,4 +6,24 @@ body {
         margin-top: 30px;
         margin-bottom: 20px;
     }
+    .btn-primary {
+        margin: auto;
+        background: #04AADC;
+        border: 0;
+        padding: 15px 60px;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        overflow: hidden;
+        display: inline-block;
+        cursor: pointer;
+        position: relative;
+    }
+    .btn-primary:hover {
+        background: lighten(#04AADC, 10%);
+    }
+    .btn-primary:active {
+        background: lighten(#00538D, 10%);
+    }
 }
