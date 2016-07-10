@@ -4,7 +4,8 @@ var mongoose = require('mongoose'),
     bcrypt = require('bcryptjs'),
     jwt = require('jsonwebtoken'),
     moment = require('moment'),
-    uuid = require('uuid')
+    uuid = require('uuid'),
+    CronJob = require('cron').CronJob;
 
 var ses = require('node-ses'),
     client = ses.createClient({
@@ -160,6 +161,7 @@ userSchema.statics.authenticate = function(userObj, cb) {
     })
 }
 
+
 userSchema.statics.enterSystem = function(userObj, cb) {
     console.log('userObj:', userObj);
     User.findOne({
@@ -217,6 +219,17 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                             console.log(err);
                             return cb(err, null)
                         }
+
+                        // var job = new CronJob({
+                        //     cronTime: '* * * * * *',
+                        //     onTick: function() {
+                        //         console.log('yo');
+                        //     },
+                        //     start: false,
+                        //     timeZone: 'America/Los_Angeles'
+                        // })
+                        // job.start()
+
                         cb(null, token)
                     })
                 }
@@ -446,7 +459,7 @@ userSchema.statics.chargedNow = function(dataObj, cb) {
         //         })
         //     })
         stripe.charges.create({
-            amount: 50*100,
+            amount: 50 * 100,
             currency: "usd",
             source: dataObj.stripeToken.id,
             description: `payment verification for ${dataObj.userData._id}!`

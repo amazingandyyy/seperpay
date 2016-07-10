@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="798px" height="796px" viewBox="0 0 798 796" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="70px" height="70px" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
-    <title>Group 2</title>
+    <title>Group 4</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-2">
-            <rect id="Rectangle-1-Copy-3" fill="#65CFF1" x="0" y="198" width="598" height="598" rx="125"></rect>
-            <rect id="Rectangle-1-Copy-4" fill="#04AADC" x="200" y="0" width="598" height="598" rx="125"></rect>
-            <path d="M200,198 L473.003735,198 C542.037266,198 598,253.956065 598,322.996265 L598,598 L324.996265,598 C255.962734,598 200,542.043935 200,473.003735 L200,198 Z" id="Combined-Shape" fill="#00538D"></path>
+        <g id="Artboard-5" transform="translate(-582.000000, -404.000000)" fill="#04AADC">
+            <g id="Group-4" transform="translate(582.000000, 404.000000)">
+                <path d="M35,70 C54.3299662,70 70,54.3299662 70,35 C70,15.6700338 54.3299662,0 35,0 C15.6700338,0 0,15.6700338 0,35 C0,54.3299662 15.6700338,70 35,70 Z M35,59.5 C48.5309764,59.5 59.5,48.5309764 59.5,35 C59.5,21.4690236 48.5309764,10.5 35,10.5 C21.4690236,10.5 10.5,21.4690236 10.5,35 C10.5,48.5309764 21.4690236,59.5 35,59.5 Z" id="Combined-Shape"></path>
+            </g>
         </g>
     </g>
 </svg>

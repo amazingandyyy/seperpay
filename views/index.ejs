@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Installments - beta</title>
+    <title>Seperpay - beta</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel='shortcut icon' type='image/x-icon' href='assets/favicon.ico' />
@@ -16,6 +16,7 @@
     <link href='/assets/et-line-font/style.css' rel='stylesheet' type='text/css' />
     <link href='/css/style.css' rel='stylesheet' type='text/css' />
     <link href='/assets/constbase.css' rel='stylesheet' type='text/css' />
+    <link rel='stylesheet' href='/assets/loading-bar2.min.css' type='text/css' media='all' />
 
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
@@ -29,10 +30,12 @@
     <script src="/bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
     <script src="/bower_components/ng-file-upload/ng-file-upload-all.min.js"></script>
     <script src="/bower_components/ng-img-crop/compile/minified/ng-img-crop.js"></script>
+    <script src='/bower_components/angular-loading-bar/build/loading-bar.min.js'></script>
     <script src="/assets/sticky/jquery.sticky.js"></script>
     <!-- <script src="http://www.w3schools.com/lib/w3data.js"></script> -->
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script src="/bower_components/angular-stripe-checkout/angular-stripe-checkout.min.js" charset="utf-8"></script>
+
 
     <script src='/js/bundle.min.js'></script>
 
@@ -40,10 +43,12 @@
 
 <body ng-app='pinchApp' ng-controller="authCtrl" ng-init='getCurrentUser()' class="constbase">
 
+
     <!-- Navbar -->
     <!-- <nav class="">
     </nav> -->
 
+    <!-- <route-loading-indicator></route-loading-indicator> -->
     <div ui-view="main"></div>
 
     <script src='/assets/constbase.js'></script>

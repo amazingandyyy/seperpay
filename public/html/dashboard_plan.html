@@ -1,9 +1,29 @@
-<h1>dashboard_plan</h1>
-<br>
-<button class="btn btn-block btn-primary" stripe-checkout="doCheckout"
-                data-key="pk_test_t1eThhOKl6esrp6f4jyWqU4J"
-                data-name="Mr Dude"
-                data-description="This is amazing!!"
-                data-amount="100">
-          Checkout
-</button>
+<div class="form-responsive">
+    <h2 class="title">Build a plan</h2>
+    <div class="form-container">
+        <form class="formForm" ng-submit='createPlan(plan)'>
+            <div class="installment-preview">
+                <h2></h2>
+            </div>
+            <div class="form-item">
+                <h2 class="form-label">Down Payment</h2>
+                <input required type="email" ng-model="plan.dpayment" placeholder="Down Payment">
+            </div>
+            <div class="form-item">
+                <h2 class="form-label">Installment</h2>
+                <input required ng-init="lock=false" ng-focus="lock=true" type="Number" ng-model="plan.ipayment" placeholder="$50" ng-minlength='6'>
+            </div>
+            <div class="form-item">
+                <h2 class="form-label">Times</h2>
+                <input required ng-init="lock=false" ng-focus="lock=true" type="Number" ng-model="plan.times" placeholder="Times" ng-minlength='6'>
+            </div>
+            <div class="form-item">
+                <h2 class="form-label">Period</h2>
+                <input required ng-init="lock=false" ng-focus="lock=true" type="Number" ng-model="plan.period" placeholder="months" ng-minlength='6'>
+            </div>
+            <div class="form-item">
+                <button type="submit" class="action-button">Create this plan</button>
+            </div>
+        </form>
+    </div>
+</div>
