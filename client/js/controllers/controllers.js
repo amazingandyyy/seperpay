@@ -74,7 +74,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 
     $scope.sendVerifyCode = (phone) => {
         console.log('phone: ', phone)
-        if(phone.length > 5){
+        if (phone.length > 5) {
             var userObj = {
                 userData: $scope.currentUser,
                 phone: phone
@@ -90,7 +90,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
     }
     $scope.verifyCode = (code) => {
         console.log('code: ', code)
-        if(code.length !== 0){
+        if (code.length !== 0) {
             var userObj = {
                 userData: $scope.currentUser,
                 code: code
@@ -100,25 +100,40 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
                     console.log('res @verifyCode: ', res.data)
                 }, err => {
                     console.log('err @verifyCode: ', err);
-            })
+                })
         }
     }
 
     $scope.doCheckout = (token) => {
         console.log('fff');
-        console.log('token: ' ,token);
+        console.log('token: ', token);
         var dataObj = {
             stripeToken: token,
             userData: $scope.currentUser
         }
-        Payment.chargeNow(dataObj).then(res=>{
+        Payment.chargeNow(dataObj).then(res => {
             console.log('res: ', res.data);
-        }, function(err){
+        }, function(err) {
             console.log('err: ', err);
         })
     }
+    $scope.installmentsGraphData = [];
+    $scope.updateTimes = (times) => {
+        $scope.installmentsGraphData = [];
+        for (var i = 0; i < times; i++) {
+            var installment = ~~(($scope.plan.total / times));
+            var height = ~~(140 * (2 / times))
+            var width = ~~(90/installment)
 
-
+            $scope.installmentsGraphData.push({
+                price: installment,
+                style: {
+                    height: `${height}px`,
+                    width: `90%`
+                }
+            })
+        }
+    }
 }
 
 

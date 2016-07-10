@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
     CronJob = require('cron').CronJob;
 
 var ses = require('node-ses'),
-    client = ses.createClient({
+    SESserver = ses.createClient({
         key: process.env.AWS_KEY,
         secret: process.env.AWS_SECRET
     })
@@ -165,32 +165,107 @@ userSchema.statics.authenticate = function(userObj, cb) {
 userSchema.statics.enterSystem = function(userObj, cb) {
     console.log('userObj:', userObj);
     User.findOne({
-        'email.data': {
-            '$in': userObj.email
-        }
-    }, (err, existingUser) => {
-        if (err) return cb(err)
-        if (existingUser) {
-            console.log('existingUser!');
-            console.log('existingUser: ', existingUser);
-            return bcrypt.compare(userObj.password, existingUser.password, function(err, isGood) {
-                if (err || !isGood) {
-                    return cb("Authentication failed.");
-                }
-                existingUser.password = null
-                let token = generateToken(existingUser)
-                if (!existingUser.email.verified) {
-                    console.log('email is not verify!')
-                    client.sendEmail({
-                        to: existingUser.email.data,
+            'email.data': {
+                '$in': userObj.email
+            }
+        })
+        .select('+password')
+        .exec((err, existingUser) => {
+            if (err) return cb(err)
+            if (existingUser) {
+                console.log('existingUser!');
+                console.log('existingUser: ', existingUser);
+                return bcrypt.compare(userObj.password, existingUser.password, function(err, isGood) {
+                    if (err || !isGood) {
+                        return cb("Authentication failed.");
+                    }
+                    existingUser.password = null
+                    let token = generateToken(existingUser)
+                    if (!existingUser.email.verified) {
+                        console.log('email is not verify!')
+                        SESserver.sendEmail({
+                            to: existingUser.email.data,
+                            from: process.env.AWS_SES_SENDER,
+                            cc: null,
+                            bcc: ['amazingandyyy@gmail.com'],
+                            subject: 'Seperpay: please verify the email!',
+                            message: notificationTemplate({
+                                title: 'Verify this Email!',
+                                description: `Please click the button to verify this email and coninue to your dashboard.`,
+                                destination: `api/verify/email/${token}`,
+                                button: `verify this email`
+                            }),
+                            altText: 'plain text'
+                        }, function(err, data, res) {
+                            if (err) {
+                                console.log(err);
+                                return cb(err, null)
+                            }
+                            return cb(null, token)
+                        })
+                    } else if (existingUser.setting.notification.login) {
+                        console.log('email is verify and login notifacation triggered!')
+                        SESserver.sendEmail({
+                            to: existingUser.email.data,
+                            from: process.env.AWS_SES_SENDER,
+                            cc: null,
+                            bcc: ['amazingandyyy@gmail.com'],
+                            subject: 'You just login Seperpay.',
+                            message: notificationTemplate({
+                                title: 'Login Notification',
+                                description: `You just logged in Seperpay dashboard at ${moment().format('hh:mm a, MMMM Do YYYY')}.`,
+                                destination: `#/dashboard`,
+                                button: `Go to my dashboard`
+                            }),
+                            altText: 'plain text'
+                        }, function(err, data, res) {
+                            if (err) {
+                                console.log(err);
+                                return cb(err, null)
+                            }
+                            cb(null, token)
+
+                            // var job = new CronJob({
+                            //     cronTime: '* * * * * *',
+                            //     onTick: function() {
+                            //         console.log('yo');
+                            //     },
+                            //     start: false,
+                            //     timeZone: 'America/Los_Angeles'
+                            // })
+                            // job.start()
+
+
+                        })
+                    }
+                })
+            }
+
+            bcrypt.hash(userObj.password, 12, (err, hash) => {
+                if (err) return cb(err);
+                var user = new User({
+                    email: {
+                        data: userObj.email
+                    },
+                    password: hash
+                })
+                user.save((err, savedUser) => {
+                    if (err) return cb(err)
+                    console.log('savedUser: ', savedUser)
+                    console.log('-> SES triggered -> ')
+
+                    let token = generateToken(savedUser)
+                    SESserver.sendEmail({
+                        to: savedUser.email.data,
                         from: process.env.AWS_SES_SENDER,
                         cc: null,
                         bcc: ['amazingandyyy@gmail.com'],
-                        subject: 'Installments: please verify the email!',
+                        subject: 'Seperpay: verify this email',
                         message: notificationTemplate({
                             title: 'Verify this Email!',
                             description: `Please click the button to verify this email and coninue to your dashboard.`,
-                            destination: `api/verify/email/${token}`
+                            destination: `api/verify/email/${token}`,
+                            button: `verify this email`
                         }),
                         altText: 'plain text'
                     }, function(err, data, res) {
@@ -200,79 +275,10 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                         }
                         cb(null, token)
                     })
-                } else if (existingUser.setting.notification.login) {
-                    console.log('email is verify and login notifacation triggered!')
-                    client.sendEmail({
-                        to: existingUser.email.data,
-                        from: process.env.AWS_SES_SENDER,
-                        cc: null,
-                        bcc: ['amazingandyyy@gmail.com'],
-                        subject: 'You just login Installments.',
-                        message: notificationTemplate({
-                            title: 'Login Notification',
-                            description: `You just logged in installments dashboard at ${moment().format('hh:mm a, MMMM Do YYYY')}.`,
-                            destination: `#/dashboard`
-                        }),
-                        altText: 'plain text'
-                    }, function(err, data, res) {
-                        if (err) {
-                            console.log(err);
-                            return cb(err, null)
-                        }
 
-                        // var job = new CronJob({
-                        //     cronTime: '* * * * * *',
-                        //     onTick: function() {
-                        //         console.log('yo');
-                        //     },
-                        //     start: false,
-                        //     timeZone: 'America/Los_Angeles'
-                        // })
-                        // job.start()
-
-                        cb(null, token)
-                    })
-                }
-            })
-        }
-
-        bcrypt.hash(userObj.password, 12, (err, hash) => {
-            if (err) return cb(err);
-            var user = new User({
-                email: {
-                    data: userObj.email
-                },
-                password: hash
-            })
-            user.save((err, savedUser) => {
-                if (err) return cb(err)
-                console.log('savedUser: ', savedUser)
-                console.log('-> SES triggered -> ')
-
-                let token = generateToken(savedUser)
-                client.sendEmail({
-                    to: savedUser.email.data,
-                    from: process.env.AWS_SES_SENDER,
-                    cc: null,
-                    bcc: ['amazingandyyy@gmail.com'],
-                    subject: 'Installments: verify email',
-                    message: notificationTemplate({
-                        title: 'Verify this Email!',
-                        description: `Please click the button to verify this email and coninue to your dashboard.`,
-                        destination: `api/verify/email/${token}`
-                    }),
-                    altText: 'plain text'
-                }, function(err, data, res) {
-                    if (err) {
-                        console.log(err);
-                        return cb(err, null)
-                    }
-                    cb(null, token)
                 })
-
             })
         })
-    }).select('+password')
 }
 
 var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -317,7 +323,7 @@ userSchema.statics.sendPhoneVerify = function(userObj, cb) {
                 if (err) return cb(err)
                 savedUser.phone.verifyCode.data = null // hide the code before making the successful callback
                 console.log('savedUser: ', savedUser);
-                sendTwilio(savedUser.phone.data, `Your verify code for installments is ${code}`, savedUser, cb)
+                sendTwilio(savedUser.phone.data, `Your verify code for Seperpay is ${code}`, savedUser, cb)
             })
 
         })
@@ -370,17 +376,15 @@ function notificationTemplate(data) {
 
         <body>
             <div style="text-align: center; font-weight: 300; font-family: 'Lato', sans-serif; padding-top:30px;">
-                <svg width="30px" viewBox="4979 3649 798 796" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(4979.000000, 3649.000000)">
-                        <rect id="Rectangle-1-Copy-3" fill="#65CFF1" x="0" y="198" width="598" height="598" rx="125"></rect>
-                        <rect id="Rectangle-1-Copy-4" fill="#04AADC" x="200" y="0" width="598" height="598" rx="125"></rect>
-                        <path d="M200,198 L473.003735,198 C542.037266,198 598,253.956065 598,322.996265 L598,598 L324.996265,598 C255.962734,598 200,542.043935 200,473.003735 L200,198 Z" id="Combined-Shape" fill="#00538D"></path>
+                <svg width="30px" viewBox="582 404 71 71" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="Group-4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(582.000000, 404.000000)">
+                        <path d="M35,70 C54.3299662,70 70,54.3299662 70,35 C70,15.6700338 54.3299662,0 35,0 C15.6700338,0 0,15.6700338 0,35 C0,54.3299662 15.6700338,70 35,70 Z M35,59.5 C48.5309764,59.5 59.5,48.5309764 59.5,35 C59.5,21.4690236 48.5309764,10.5 35,10.5 C21.4690236,10.5 10.5,21.4690236 10.5,35 C10.5,48.5309764 21.4690236,59.5 35,59.5 Z" id="Combined-Shape" fill="#04AADC"></path>
                     </g>
                 </svg>
                 <div>
                     <h1 style="font-weight: 300; text-transform: capitalize">${data.title}</h1>
                     <h2 style="font-weight: 300; font-size: 1.1em; color: rgba(0,0,0,0.4); margin-top: 10px;">${data.description}</h2>
-                    <a href="http://localhost:8000/${data.destination}" target="_blank"><button class="verify">Go to my dashboard</button></a>
+                    <a href="http://localhost:8000/${data.destination}" target="_blank"><button class="verify">${data.button}</button></a>
                 </div>
             </div>
         </body>

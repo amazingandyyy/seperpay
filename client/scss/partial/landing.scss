@@ -26,6 +26,9 @@
             .middle {
                 fill: rgba(255,255,255,1);
             }
+            .itself {
+                fill: rgba(255,255,255,1);
+            }
         }
     }
     nav.folded {
@@ -46,6 +49,7 @@
         padding-top: 170px;
         height: 85vh;
         background-image: url("/assets/images/amazing-photo.jpg");
+        filter: contrast(110%);
         background-position: center right 26%;
         background-repeat: no-repeat;
         background-size: cover;

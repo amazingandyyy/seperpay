@@ -1,20 +1,18 @@
 <div class="home-page">
     <nav class="top">
-        <svg class="logo" viewBox="5019 88 798 796" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(5019.000000, 88.000000)">
-                <rect class="bottom" fill="#65CFF1" x="0" y="198" width="598" height="598" rx="125"></rect>
-                <rect class="top" fill="#04AADC" x="200" y="0" width="598" height="598" rx="125"></rect>
-                <path class="middle" fill="#00538D" d="M200,198 L473.003735,198 C542.037266,198 598,253.956065 598,322.996265 L598,598 L324.996265,598 C255.962734,598 200,542.043935 200,473.003735 L200,198 Z" id="Combined-Shape"></path>
-            </g>
+        <svg class="logo" viewBox="582 404 71 71" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <path class="itself" d="M617,474 C636.329966,474 652,458.329966 652,439 C652,419.670034 636.329966,404 617,404 C597.670034,404 582,419.670034 582,439 C582,458.329966 597.670034,474 617,474 Z M617,463.5 C630.530976,463.5 641.5,452.530976 641.5,439 C641.5,425.469024 630.530976,414.5 617,414.5 C603.469024,414.5 592.5,425.469024 592.5,439 C592.5,452.530976 603.469024,463.5 617,463.5 Z"
+                id="Combined-Shape" stroke="none" fill="#04AADC" fill-rule="evenodd"></path>
         </svg>
     </nav>
     <div class="main-hero">
-        <img src="/assets/images/logo-white.svg" style="fill: white;" width="180px">
+        <img src="/assets/images/logo-text-white.svg" width="180px">
         <h1 class="title">Paying in installments is universal rights.</h1>
-        <div class="signUp" ui-sref="authEntrance">Declare my right!</div>
+        <div ng-if="!currentUser" class="signUp" ui-sref="authEntrance">Declare my right!</div>
+        <div ng-if="currentUser" class="signUp" ui-sref="dashboard">Go to my dashboard!</div>
     </div>
     <div class="intro-hero">
-        <img src="/assets/images/black-logo.svg" style="fill: #333" width="150px">
+        <img src="/assets/images/logo-text-color.svg" style="fill: #333" width="150px">
         <h1>Reinvent installments.</h1>
         <div class="paragraph">
             <p>
@@ -39,7 +37,7 @@
             <div class="row">
                 <h1 class="title">We simplify process. You benefits your customers</h1>
                 <h2 class="intro">
-                    <img src="/assets/images/black-logo.svg" style="height: 12px; margin-top: -3px"> makes installments no pain for you and your customers. <br>Set up a installment with mobile app, and track everthing through the dashboard. Transaction itself will complete automatically. Yes, it's that easy!
+                    <img src="/assets/images/logo-text-color.svg" style="height: 12px; margin-top: -3px"> makes installments no pain for you and your customers. <br>Set up a installment with mobile app, and track everthing through the dashboard. Transaction itself will complete automatically. Yes, it's that easy!
                 </h2>
             </div>
             <div class="row">
@@ -75,32 +73,32 @@
     </div>
     <div class="intro-section">
         <div class="container">
-        <div class="row">
-            <h1 class="title">Our promise</h1>
+            <div class="row">
+                <h1 class="title">Our promise</h1>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 specie-item">
+                    <img src="/assets/images/specie-fast.svg" alt="" />
+                    <h2>FLEXIBLE</h2>
+                    <h4></h4>
+                </div>
+                <div class="col-sm-3 specie-item">
+                    <img src="/assets/images/specie-trans.svg" alt="" />
+                    <h2 style="margin-top: 15px;">Transparant</h2>
+                    <h4></h4>
+                </div>
+                <div class="col-sm-3 specie-item">
+                    <img src="/assets/images/specie-lowfee.svg" alt="" />
+                    <h2>Low Fee</h2>
+                    <h4></h4>
+                </div>
+                <div class="col-sm-3 specie-item">
+                    <img src="/assets/images/specie-secure.svg" alt="" />
+                    <h2>Secured</h2>
+                    <h4></h4>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-sm-3 specie-item">
-                <img src="/assets/images/specie-fast.svg" alt="" />
-                <h2>FLEXIBLE</h2>
-                <h4></h4>
-            </div>
-            <div class="col-sm-3 specie-item">
-                <img src="/assets/images/specie-trans.svg" alt="" />
-                <h2 style="margin-top: 15px;">Transparant</h2>
-                <h4></h4>
-            </div>
-            <div class="col-sm-3 specie-item">
-                <img src="/assets/images/specie-lowfee.svg" alt="" />
-                <h2>Low Fee</h2>
-                <h4></h4>
-            </div>
-            <div class="col-sm-3 specie-item">
-                <img src="/assets/images/specie-secure.svg" alt="" />
-                <h2>Secured</h2>
-                <h4></h4>
-            </div>
-        </div>
-    </div>
     </div>
     <!-- <div class="intro-section">
         <div class="grid">
@@ -119,10 +117,11 @@
         </div>
     </div> -->
     <div class="afterall-hero">
-        <img src="/assets/images/black-logo.svg" width="150px">
+        <img src="/assets/images/logo-text-color.svg" width="150px">
         <br>
         <br>
-        <div class="signUp" ui-sref="authEntrance">Join for free!</div>
+        <div ng-if="!currentUser" class="signUp" ui-sref="authEntrance">Join for free!</div>
+        <div ng-if="currentUser" class="signUp" ui-sref="dashboard">Go to my dashboard</div>
         <!-- <div class="row">
             <div class="col-sm-6">
                 <h2>iOS App</h2>
@@ -156,6 +155,6 @@
                 </div>
             </div>
         </div>
-        <div class="copyright">Copyright © 2016 AmazingAndyyy. All rights reserved. installment logo and name are trademarks of Installments Inc.</div>
+        <div class="copyright">Copyright © 2016 AmazingAndyyy. All rights reserved. Seperpay logo and name are trademarks of Seperpay Inc.</div>
     </footer>
 </div>

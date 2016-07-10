@@ -26,4 +26,26 @@ body {
     .btn-primary:active {
         background: lighten(#00538D, 10%);
     }
+    .btn-primary {
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin-top: 50px;
+        border: none;
+        border-radius: 0;
+        background: red;
+        width: 100%;
+        background: #04AADC;
+        color: white;
+        height: 55px;
+        outline: none;
+        transition: .1s background ease-in-out;
+        cursor: pointer;
+    }
+    button.btn-primary:hover {
+        background: $brand-secondary;
+    }
+    button.btn-primary:active {
+        background: darken(#65CFF1, 10%);
+    }
 }
