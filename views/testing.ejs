@@ -5,8 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href='https://fonts.googleapis.com/css?family=PT+Serif|Lato:300' rel='stylesheet' type='text/css' />
+
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+
     <style media="screen">
-        .verify {
+        .action {
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
@@ -18,22 +22,60 @@
             color: white;
             background: #04AADC;
             transition: .1s background ease-in-out;
+            outline: none;
         }
-        .verify:hover {
-            transition: .1s background ease-in-out;
+
+        .action:hover {
+            transition: .1s all ease-in-out;
             background: #03528D;
+            transform: scale(1.01);
+        }
+
+        .action:active {
+            transition: .1s all ease-in-out;
+            transform: scale(0.99);
         }
     </style>
 </head>
 
-<body>
+<body ng-app="testingApp" ng-controller="testingCtrl">
     <div style="text-align: center; font-weight: 300; font-family: 'Lato', sans-serif; padding-top:30px;">
         <img class="logo" src="/assets/images/logo-color.svg" width="34px">
         <div>
-            <h1 style="font-weight: 300;">Welcome</h1>
-            <button class="verify">Verify this Email</button>
+            <h1 style="font-weight: 300;">{{state.thing}}</h1>
+            <button class="action" ng-click="BtnClicked()">Get blue bluetooth</button>
         </div>
     </div>
 </body>
+
+<script>
+    angular
+        .module('testingApp', [])
+        // .cofig(function($stateProvider, $urlRouterProvider) {
+        //     $stateProvider.state()
+        //
+        //     $urlRouterProvider.otherwise('/')
+        // })
+        .controller('testingCtrl', function($scope) {
+            console.log('fff')
+
+            $scope.state = {}
+            $scope.state.thing = 'click the button!'
+            $scope.BtnClicked = () => {
+                navigator.bluetooth.requestDevice({
+                        filters: [{
+                            services: [0x1234, 0x12345678, '11111111-2222-3333-4444-555555555555']
+                        }]
+                    })
+                    .then(device => {
+                        console.log('check')
+                        console.log('device: ', device);
+                     })
+                    .catch(err => {
+                        console.log('err: ', err);
+                    });
+            }
+        })
+</script>
 
 </html>
