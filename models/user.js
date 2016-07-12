@@ -391,7 +391,7 @@ function notificationTemplate(data) {
         </html>`
 }
 
-userSchema.statics.verifyAuthyToken = function(userObj, cb) {
+userSchema.statics.verifyPhoneToken = function(userObj, cb) {
     let userId = userObj.userData._id
     let code = userObj.code
     User
@@ -399,9 +399,7 @@ userSchema.statics.verifyAuthyToken = function(userObj, cb) {
         .select('+phone.verifyCode.data')
         .exec((err, dbUser) => {
             if (err || !dbUser) {
-                return res.status(400).send(err || {
-                    error: 'User not found.'
-                })
+                return cb(err)
             }
             console.log('dbUser: ', dbUser);
             var now = Date.now()
@@ -410,15 +408,12 @@ userSchema.statics.verifyAuthyToken = function(userObj, cb) {
                     msg: "It's already been verified!",
                     dbUser: dbUser
                 })
-            }
-            if (dbUser.phone.verifyCode.expiredAt < now) {
+            }else if (dbUser.phone.verifyCode.expiredAt < now) {
                 // code is expired
                 return cb(null, {
                     msg: "expired"
                 })
-            }
-            // code is not expired
-            if (code == dbUser.phone.verifyCode.data) {
+            }else if (code == dbUser.phone.verifyCode.data) {
                 console.log('not expired and matched!');
                 // codes are the same
                 // -> set user's phone verified to true
@@ -427,13 +422,14 @@ userSchema.statics.verifyAuthyToken = function(userObj, cb) {
                     if (err) return cb(err)
                     console.log(savedUser)
                     sendTwilio(savedUser.phone.data, `Big congrats! Your phone, ${savedUser.phone.data} is now successfully verified! Login dashboard to create a plan: ${process.env.SITE_CURRENT_URL}`, savedUser, cb)
-                    return cb(null, savedUser)
+                })
+            }else{
+                // code is not expired
+                console.log('not expired but not matched!')
+                cb(null, {
+                    msg: "incorrect"
                 })
             }
-            console.log('not expired but not matched!')
-            cb(null, {
-                msg: "incorrect"
-            })
         })
         // With a valid Authy ID, send the 2FA token for this user
         // authy.request_sms(currentUser.phone.authyId, true, function(err, res) {

@@ -12,11 +12,21 @@ angular
     // .controller('projectSettingCtrl', projectSettingCtrl)
 
 
-function homeCtrl() {
-    console.log('homeCtrl loaded');
+function homeCtrl($rootScope) {
+    console.log('homeCtrl loaded')
+    $rootScope.previousState
+    $rootScope.currentState
+    $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+        $rootScope.previousState = from.name;
+        $rootScope.currentState = to.name;
+        console.log('Previous state:' + $rootScope.previousState)
+        console.log('Current state:' + $rootScope.currentState)
+    })
+    $rootScope.$on('animStart', function($event, element, speed) {})
+    $rootScope.$on('animEnd', function($event, element, speed) {})
 }
 
-function authCtrl($scope, $auth, $state, Account) {
+function authCtrl($scope, $auth, $state, Account, $window) {
     console.log('authCtrl loaded')
 
     $scope.getCurrentUser = () => {
@@ -24,11 +34,12 @@ function authCtrl($scope, $auth, $state, Account) {
     }
 
     $scope.auth_enter = (authData) => {
-        console.log('authData: ', authData);
         $auth.signup(authData)
             .then(res => {
                 $auth.setToken(res)
-                $state.go('dashboard')
+                $state.go('dashboard', {}, {
+                    reload: true
+                })
                 console.log('res @auth_enter: ', res.data)
                 getCurrentUser()
                     // toastr.info('You have successfully created a new account and have been signed-in');
@@ -43,7 +54,11 @@ function authCtrl($scope, $auth, $state, Account) {
     }
     $scope.logout = () => {
         $auth.logout()
-        $state.go('authEntrance')
+        $scope.currentUser = null;
+        $state.go('home', {}, {
+            reload: true
+        })
+        $window.location.reload();
     }
 
     function getCurrentUser() {
@@ -60,7 +75,7 @@ function authCtrl($scope, $auth, $state, Account) {
 
 }
 
-function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
+function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $interval) {
     console.log('dashboardCtrl loaded')
     Account.getCurrentUser($auth.getToken())
         .then(res => {
@@ -68,23 +83,38 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
                 $rootScope.currentUser = res.data
             }
             console.log('res @getCurrentUser: ', res.data)
+            checkVerifyPhoneSentStatus(res.data)
         }, err => {
             $state.go('home')
         })
+
+    function checkVerifyPhoneSentStatus(currentUserData) {
+        $scope.verifyPhoneSentOut = false
+
+        let expiredTime = Number(currentUserData.phone.verifyCode.expiredAt)
+        let nowTime = Date.now()
+        if (expiredTime > nowTime) {
+            $scope.verifyPhoneSentOut = true;
+        }
+        $scope.verifyPhoneCountDown = () => {
+            return `${expiredTime}`
+        }
+    }
 
     $scope.sendVerifyCode = (phone) => {
         console.log('phone: ', phone)
         if (phone.length > 5) {
             var userObj = {
-                userData: $scope.currentUser,
+                userData: $rootScope.currentUser,
                 phone: phone
             }
             Account.sendVerifyCode(userObj)
                 .then(res => {
                     console.log('res @sendVerifyCode: ', res.data)
+                    $rootScope.currentUser.phone.data = phone;
+                    $scope.verifyPhoneSentOut = true;
                 }, err => {
                     console.log('err @sendVerifyCode: ', err);
-                    // $state.go('home')
                 })
         }
     }
@@ -92,12 +122,13 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
         console.log('code: ', code)
         if (code.length !== 0) {
             var userObj = {
-                userData: $scope.currentUser,
+                userData: $rootScope.currentUser,
                 code: code
             }
             Account.verifyCode(userObj)
                 .then(res => {
                     console.log('res @verifyCode: ', res.data)
+                    $rootScope.currentUser.phone.verified = true;
                 }, err => {
                     console.log('err @verifyCode: ', err);
                 })
@@ -109,7 +140,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
         console.log('token: ', token);
         var dataObj = {
             stripeToken: token,
-            userData: $scope.currentUser
+            userData: $rootScope.currentUser
         }
         Payment.chargeNow(dataObj).then(res => {
             console.log('res: ', res.data);
@@ -123,7 +154,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
         for (var i = 0; i < times; i++) {
             var installment = ~~(($scope.plan.total / times));
             var height = ~~(140 * (2 / times))
-            var width = ~~(90/installment)
+            var width = ~~(90 / installment)
 
             $scope.installmentsGraphData.push({
                 price: installment,
@@ -148,7 +179,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //         $scope.updateProjectData = $scope.project;
 //         $scope.project.author.forEach(author => {
 //             // in case, project has mutiple authors
-//             if (author._id == $scope.currentUser._id) {
+//             if (author._id == $rootScope.currentUser._id) {
 //                 isAuthor = true;
 //             }
 //         })
@@ -208,7 +239,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //                 console.log('project deleted');
 //                 console.log('res: ', res.data);
 //                 $state.go('ppage', {
-//                     userId: $scope.currentUser._id
+//                     userId: $rootScope.currentUser._id
 //                 });
 //             }, err => {
 //                 console.log('user is not logged in.');
@@ -240,11 +271,11 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //     Project.getOnePorject(projectId).then(res => {
 //         console.log('projectData: ', res.data);
 //         $scope.project = res.data
-//         console.log('$scope.currentUser._id: ', $scope.currentUser._id)
+//         console.log('$rootScope.currentUser._id: ', $rootScope.currentUser._id)
 //         console.log('$scope.project.author: ', $scope.project.author)
 //         var authors = res.data.author
 //         for (var author in authors) {
-//             if ($scope.currentUser._id == authors[author]._id) {
+//             if ($rootScope.currentUser._id == authors[author]._id) {
 //                 return $scope.state.isAuthor = true;
 //             }
 //         }
@@ -283,9 +314,9 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 // function profileSettingCtrl($scope, $http, $stateParams, Account, $state, $window, Upload, $location) {
 //     console.log('profileSettingCtrl loaded');
 //
-//     if ($stateParams.userId == $scope.currentUser._id) {
+//     if ($stateParams.userId == $rootScope.currentUser._id) {
 //         // console.log('isAuthUser');
-//         $scope.updateUserData = angular.copy($scope.currentUser);
+//         $scope.updateUserData = angular.copy($rootScope.currentUser);
 //     } else {
 //         // console.log('is not AuthUser');
 //         $state.go('home');
@@ -311,7 +342,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //     $scope.uploadFiles = (file) => {
 //         $scope.photoUploading = true;
 //         var file = file[0]
-//         var userId = $scope.currentUser._id;
+//         var userId = $rootScope.currentUser._id;
 //         console.log('photo: ', file);
 //         if (file) {
 //             Upload.upload({
@@ -337,7 +368,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //     $scope.state.followStatus = false
 //     var displayUser;
 //     var uriUserId = $stateParams.userId;
-//     if (uriUserId == $scope.currentUser._id) {
+//     if (uriUserId == $rootScope.currentUser._id) {
 //         $scope.state.isTheUser = true;
 //     }
 //     if ($scope.state.isTheUser) {
@@ -406,9 +437,9 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //                 var followersList = displayUser.followersList
 //                 console.log('checked');
 //                 for (var follower in followersList) {
-//                     console.log('currentUser: ', $scope.currentUser._id);
+//                     console.log('currentUser: ', $rootScope.currentUser._id);
 //                     console.log('followersList[follower]._id: ', followersList[follower]._id);
-//                     if (followersList[follower]._id == $scope.currentUser._id) {
+//                     if (followersList[follower]._id == $rootScope.currentUser._id) {
 //                         $scope.state.followStatus = true
 //                     } else {
 //                         $scope.state.followStatus = false
@@ -423,7 +454,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //
 // function navCtrl($http, $scope, $auth, Account, $rootScope, $timeout, $window, $state, focus, Project, $location) {
 //     // console.log('navCtrl loaded');
-//     $scope.currentUser = '';
+//     $rootScope.currentUser = '';
 //     $scope.loginloading = false;
 //     $scope.logoutloading = false;
 //     $rootScope.hideNav = false;
@@ -434,12 +465,12 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //             $auth.authenticate(provider).then(data => {
 //                 Account.getCurrentUser().then(res => {
 //                     console.log('user logged in: ', res.data);
-//                     $scope.currentUser = res.data;
+//                     $rootScope.currentUser = res.data;
 //                     $scope.loginloading = false;
-//                     console.log('$scope.currentUser._id: ', $scope.currentUser._id);
+//                     console.log('$rootScope.currentUser._id: ', $rootScope.currentUser._id);
 //                     if ($state.current.name == 'home') {
 //                         $state.go('ppage', {
-//                             userId: $scope.currentUser._id
+//                             userId: $rootScope.currentUser._id
 //                         });
 //                     } else {
 //                         $window.location.reload();
@@ -454,8 +485,8 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //         // console.log('$auth.isAuthenticated()): ', $auth.isAuthenticated()));
 //     if ($auth.isAuthenticated()) {
 //         Account.getCurrentUser().then(res => {
-//             $scope.currentUser = res.data;
-//             console.log('navCtrl triggered and currentUser: ', $scope.currentUser);
+//             $rootScope.currentUser = res.data;
+//             console.log('navCtrl triggered and currentUser: ', $rootScope.currentUser);
 //         }, err => {
 //             console.log('user is not logged in.');
 //         })
@@ -482,7 +513,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //             $window.location.reload()
 //         } else {
 //             $state.go('ppage', {
-//                 userId: $scope.currentUser._id
+//                 userId: $rootScope.currentUser._id
 //             })
 //         }
 //     }
@@ -512,7 +543,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment) {
 //                     $window.location.reload();
 //                 } else {
 //                     $state.go('ppage', {
-//                         userId: $scope.currentUser._id
+//                         userId: $rootScope.currentUser._id
 //                     });
 //                 }
 //             }, Math.random() * 1500 + 300);

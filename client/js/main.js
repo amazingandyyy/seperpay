@@ -20,18 +20,20 @@ function windowScrollDown() {
     $(window).scroll(function() {
         // console.log($(window).scrollTop());
         st = $(this).scrollTop();
-        if (st < lastScrollTop) {
-            $('.home-page nav').removeClass('folded')
-            $('.home-page nav').css('border-bottom', '0px solid');
-        } else {
-            $('.home-page nav').addClass('folded')
+        if($(window).scrollTop() > 30){
+            if (st < lastScrollTop) {
+                $('.home-page nav').removeClass('folded')
+                $('.home-page nav').css('border-bottom', '0px solid');
+            } else {
+                $('.home-page nav').addClass('folded')
+            }
         }
         lastScrollTop = st
 
-        if ($(window).scrollTop() < 1) {
+        if ($(window).scrollTop() < 10) {
             $('.home-page nav').addClass('top')
         }
-        if ($(window).scrollTop() > 1) {
+        if ($(window).scrollTop() > 10) {
             $('.home-page nav').removeClass('top')
         }
         if ($(window).scrollTop() > 30) {

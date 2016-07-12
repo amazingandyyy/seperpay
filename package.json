@@ -1,10 +1,10 @@
 {
-  "name": "projectsincodinghouse",
+  "name": "seperpay",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "gulp",
+    "start": "gulp build",
     "postinstall": "bower i && gulp build"
   },
   "engines": {

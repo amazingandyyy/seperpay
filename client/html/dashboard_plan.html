@@ -1,47 +1,34 @@
 <div class="dashboard_plan">
-    <div class="dashboard-hero">
+    <!-- <div class="dashboard-hero"> -->
         <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="dashboard-block">
-                        <h2>Create a personal plan</h2>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="dashboard-block">
-                        <h2>Create a company plan</h2>
-                    </div>
-                </div>
-            </div>
+            <div ui-view="dashboard_child_section" class="anim-in-out2 anim-fade2" data-anim-speed="300" data-anim-sync="true"></div>
         </div>
-    </div>
-    <div class="dashboard-section container">
-        jfkdjflk;s
-    </div>
+    <!-- </div> -->
 </div>
 
-
-<!--
-<form class="formForm" ng-submit='createPlan(plan)'>
-    <div class="form-item">
-        <h2 class="title">What is Total Price?</h2>
-        <input class="total" type="number" ng-model="plan.total" placeholder="0" required>
-    </div>
-    <div class="form-item" ng-hide="form_next">
-        <button ng-disabled="!plan.total" type="button" ng-click="form_next = true" ng-init="form_next = false" class="btn-primary">Design installments plan</button>
-    </div>
-    <br>
-    <div ng-if="form_next" class="animated flipInX">
-        <h2 class="title">How many times do you want to seperate?</h2>
-        <div class="form-item">
-            <input class="range" type="range" min="1" max="12" ng-init="plan.times = 3" ng-model="plan.times" ng-change="updateTimes(plan.times)">
+    <!-- <div class="dashboard-section container">
+        <form class="formForm" ng-submit='createPlan(plan)'>
+            <div class="form-item">
+                <h2 class="title">What is Total Price?</h2>
+                <input class="total" type="number" ng-model="plan.total" placeholder="0" required>
+            </div>
+            <div class="form-item" ng-hide="form_next">
+                <button ng-disabled="!plan.total" type="button" ng-click="form_next = true" ng-init="form_next = false" class="btn-primary">Design installments plan</button>
+            </div>
             <br>
-            <br> {{plan.times}} months
-        </div>
-        <br>
-        <div ng-init="updateTimes(plan.times)" class="installmentsGraphContainer">
-            <div class="graph-item" ng-repeat="installment in installmentsGraphData" ng-style="installment.style"><span>${{installment.price}}</span></div>
-        </div>
-        <br>
+            <div ng-if="form_next" class="animated flipInX">
+                <h2 class="title">How many times do you want to seperate?</h2>
+                <div class="form-item">
+                    <input class="range" type="range" min="1" max="12" ng-init="plan.times = 3" ng-model="plan.times" ng-change="updateTimes(plan.times)">
+                    <br>
+                    <br> {{plan.times}} months
+                </div>
+                <br>
+                <div ng-init="updateTimes(plan.times)" class="installmentsGraphContainer">
+                    <div class="graph-item" ng-repeat="installment in installmentsGraphData" ng-style="installment.style"><span>${{installment.price}}</span></div>
+                </div>
+                <br>
+            </div>
+        </form>
     </div>
-</form> -->
+</div> -->

@@ -1,24 +1,31 @@
-<div class="row">
+<div class="row" style="padding-top: 60px;">
     <div class="col-sm-3"></div>
     <div class="col-sm-6">
-        <h2 class="title">verification</h2>
+        <h2 class="title" style="padding-left: 30px;">verification</h2>
         <div class="list-group">
             <a href="" class="list-group-item list-group-item-success-">Email signed up
                 <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.data)? 'fa-check' : 'fa-info' "></i></span>
+                <br>
+                <small style="color: rgba(0,0,0,0.6); text-transform: lowercase; margin-bottom: 10px;" ng-if="currentUser.email.verified">Signed up with <b>{{currentUser.email.data}}</b></b></small>
             </a>
             <a href="" class="list-group-item list-group-item-warning-">Confirm Email
                 <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.email.verified)? 'fa-check' : 'fa-info' "></i></span>
+                <br>
+                <small style="color: rgba(0,0,0,0.6); text-transform: lowercase; margin-bottom: 10px;" ng-if="currentUser.email.verified">Email of <b>{{currentUser.email.data}}</b> has been verified</b></small>
             </a>
-            <a href="" class="list-group-item list-group-item-warning-">Confirm Phone
+            <a href="" class="list-group-item list-group-item-warning-">Confirm Phone Number
                 <span class="pull-xs-right"><i class="fa" ng-class="(currentUser.phone.verified)? 'fa-check' : 'fa-info' "></i></span>
+                <br>
+                <small style="color: rgba(0,0,0,0.6); text-transform: lowercase; margin-bottom: 10px;" ng-if="verifyPhoneSentOut && !currentUser.phone.verified">Code has been sent out to <b>{{currentUser.phone.data}}</b></small>
+                <small style="color: rgba(0,0,0,0.6); text-transform: lowercase; margin-bottom: 10px;" ng-if="currentUser.phone.verified">number of <b>{{currentUser.phone.data}}</b> has been verified</b></small>
                 <div ng-if="!currentUser.phone.verified">
-                    <form>
-                        <input type="phone" ng-model="phone" placeholder="phone number">
-                        <button type="button" ng-click="sendVerifyCode(phone)" class="btn">Send me verify code</button>
+                    <form ng-if="!verifyPhoneSentOut">
+                        <input class="form-control" type="phone" ng-model="phone" placeholder="phone number">
+                        <button type="button" ng-click="sendVerifyCode(phone)" class="btn btn-primary btn-block">Send me verify code</button>
                     </form>
-                    <form>
-                        <input type="number" ng-model="code" placeholder="verify code">
-                        <button type="button" ng-click="verifyCode(code)" class="btn">Verify</button>
+                    <form ng-show="verifyPhoneSentOut">
+                        <input class="form-control" type="number" ng-model="code" placeholder="verify code">
+                        <button type="button" ng-click="verifyCode(code)" class="btn btn-primary btn-block">Verify</button>
                     </form>
                 </div>
             </a>

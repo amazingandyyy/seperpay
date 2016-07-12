@@ -26,7 +26,7 @@ router.post('/phone', User.authMiddleware, (req, res) => {
 router.put('/phone', User.authMiddleware, (req, res) => {
     if(req.user._id==req.body.userData._id){
         console.log('verify phone verification code')
-        User.verifyAuthyToken(req.body, (err, data) => {
+        User.verifyPhoneToken(req.body, (err, data) => {
             if (err) return console.log('err @verifyAuthyToken: ', err);
             console.log('data: ', data)
             res.status(err ? 400 : 200).send(err || data)

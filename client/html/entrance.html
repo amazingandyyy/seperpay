@@ -10,8 +10,13 @@
                 <span ng-if="!(auth.password.length > 6)" class="lock"><i class="fa fa-unlock-alt"></i></span>
                 <span ng-if="auth.password.length > 6" class="lock"><i class="fa fa-lock"></i></span>
             </div>
+            <!-- <div class="form-item">
+                <input required ng-init="lock=false" ng-focus="lock=true" type="password" ng-model="auth.confirmpassword" placeholder="Password" class="password" ng-minlength='6'>
+                <span ng-if="!(auth.password.length > 6)" class="lock"><i class="fa fa-unlock-alt"></i></span>
+                <span ng-if="auth.password.length > 6" class="lock"><i class="fa fa-lock"></i></span>
+            </div> -->
             <div class="form-item">
-                <button type="submit" class="action-button">go to My dashboard</button>
+                <button type="submit" class="btn btn-primary btn-block">Log in</button>
             </div>
         </form>
     </div>

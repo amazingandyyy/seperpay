@@ -16,7 +16,8 @@
     <link href='/assets/et-line-font/style.css' rel='stylesheet' type='text/css' />
     <link href='/css/style.css' rel='stylesheet' type='text/css' />
     <link href='/assets/constbase.css' rel='stylesheet' type='text/css' />
-    <link rel='stylesheet' href='/assets/loading-bar2.min.css' type='text/css' media='all' />
+    <link href='/assets/loading-bar2.min.css' type='text/css' media='all' rel='stylesheet'/>
+    <link href='/bower_components/angular-ui-router-anim-in-out/css/anim-in-out.css' type='text/css' rel='stylesheet' />
 
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/angular/angular.js"></script>
@@ -33,13 +34,15 @@
     <script src='/bower_components/angular-loading-bar/build/loading-bar.min.js'></script>
     <script src="/assets/sticky/jquery.sticky.js"></script>
     <!-- <script src="http://www.w3schools.com/lib/w3data.js"></script> -->
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="https://js.stripe.com/v2/" type="text/javascript" ></script>
     <script src="/bower_components/angular-stripe-checkout/angular-stripe-checkout.min.js" charset="utf-8"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js" charset="utf-8"></script>
+    <script src="/bower_components/angular-ui-router-anim-in-out/anim-in-out.js" charset="utf-8"></script>
 
     <script src='/js/bundle.min.js'></script>
 </head>
 
-<body ng-app='pinchApp' ng-controller="authCtrl" ng-init='getCurrentUser()' class="constbase">
+<body ng-app='pinchApp' ng-controller="homeCtrl" ng-init='getCurrentUser()' class="constbase">
     <div ui-view="main"></div>
     <script src='/assets/constbase.js'></script>
 </body>

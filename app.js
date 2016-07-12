@@ -11,8 +11,8 @@ let express = require('express'),
     chalk = require('chalk'),
     error = chalk.bold.red
 
-let PORT = process.env.PORT || 8000
-const MONGOURL = process.env.MONGOLAB_URI || 'mongodb://localhost/installments'
+let PORT = process.env.PORT
+const MONGOURL = process.env.MONGOLAB_URI
 
 if (!process.env.JWT_SECRET) {
     console.error(error(`ERROR:  Missing process.env.JWT_SECRET.`))

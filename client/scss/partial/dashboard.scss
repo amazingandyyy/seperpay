@@ -68,17 +68,39 @@
     .list-group {
         text-transform: capitalize;
     }
-    .dashboard-hero {
+    h1.title {
+        color: #2E3B50;
+        font-weight: 300;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .dashboard_plan {
+        height: 80vh;
         background: white;
-        padding: 30px 10px 50px 10px;
-        border-bottom: 1px solid rgba(0,0,0,0.15);
-        .dashboard-block {
-            background: rgba(0,0,0,1);
-            padding: 30px 10px;
-        }
-        &.dashboard_plan {
-            background: white;
-            color: rgba(0,0,0,0.8);
+        padding-top: 60px;
+        color: rgba(0,0,0,0.8);
+        .white-card {
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            flex-flow: row wrap;
+            align-items: center;
+            transition: 0.1 all linear;
+            &.start {
+                transition: 0.1 all ease-in-out;
+                background: white;
+            }
+            &.start:hover {
+                transition: 0.1 all ease-in-out;
+                background: $brand-primary;
+                .information h5,
+                h6 {
+                    color: white !important;
+                }
+            }
+            &.start:active {
+                background: $brand-secondary;
+            }
         }
     }
     .form-item {
