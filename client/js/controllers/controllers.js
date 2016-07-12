@@ -153,7 +153,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $int
         $scope.installmentsGraphData = [];
         for (var i = 0; i < times; i++) {
             var installment = ~~(($scope.plan.total / times));
-            var height = ~~(140 * (2 / times))
+            var height = ~~(200 * (2 / times))
             var width = ~~(90 / installment)
 
             $scope.installmentsGraphData.push({

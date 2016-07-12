@@ -1,10 +1,20 @@
-<div class="">
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
-    <h1>dashboard_plan_single</h1>
+<div class="plan_section">
+    <h2 class="title">How much is totaly price?</h2>
+    <input type="text" class="totalPrice" ng-model="plan.total" placeholder="1299.00">
 </div>
+<div class="plan_section animated zoomIn" ng-if="plan.total>1">
+    <h2 class="title">How many installments?</h2>
+    <div class="form-item">
+        <input class="range" type="range" min="1" max="12" ng-init="plan.times = 3" ng-model="plan.times" ng-change="updateTimes(plan.times)">
+        <br>
+        <br> {{plan.total | currency}} for {{plan.times}} months  totally
+        <br>
+    </div>
+    <br>
+    <div ng-init="updateTimes(plan.times)" class="installmentsGraphContainer">
+        <div class="graph-item" ng-repeat="installment in installmentsGraphData" ng-style="installment.style"><span>{{plan.total/plan.times | currency}}</span></div>
+    </div>
+    <br>
+</div>
+
+<button ng-disabled="plan.times" type="button" class="btn btn-block btn-primary">Preview</button>

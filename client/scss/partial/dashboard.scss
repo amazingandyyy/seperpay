@@ -1,6 +1,7 @@
 @import "../myvariables";
 .dashboard-page {
     padding: 60px 0;
+    background: #F7F7F7;
     nav {
         transition: 0.2s all ease-in-out;
         padding: 5px 10px;
@@ -75,9 +76,8 @@
         text-align: center;
     }
     .dashboard_plan {
-        height: 80vh;
-        background: white;
-        padding-top: 60px;
+        height: 100vh;
+        padding-top: 40px;
         color: rgba(0,0,0,0.8);
         .white-card {
             min-height: 200px;
@@ -119,12 +119,11 @@
             background: rgba(0,0,0,0.2);
             box-shadow: inset 0 0 0 0.2px rgba(0,0,0,0.3);
             outline: none;
-            margin-left: 0;
-            margin-right: 0;
-            margin-bottom: 5.5px;
+            margin: 30px;
             max-width: 90%;
             white-space: nowrap;
             padding: 0 -10px;
+            width: 70%;
         }
         input[type=range]::-webkit-slider-runnable-track {
             outline: none;
@@ -160,6 +159,7 @@
             height: 100px;
             width: 30px;
             max-height: 120px;
+            min-height: 35px;
             position: relative;
             span {
                 position: absolute;
@@ -171,6 +171,29 @@
             }
         }
     }
+    .plan_section {
+        background: white;
+        text-align: center;
+        padding: 20px 10px;
+        margin: 20px auto;
+        h1.title {
+            margin: 0 auto;
+            font-weight: 300;
+            font-size: 170%;
+        }
+        input.totalPrice {
+            margin: auto;
+            text-align: center;
+            font-size: 400%;
+            font-weight: 900;
+            border: 0px solid;
+            display: block;
+            outline: none;
+            height: 100px;
+            margin-top: 10px;
+            width: 90%;
+        }
+    }
 }
 @media (min-width: 767px) {
     .dashboard-page {
@@ -179,6 +202,14 @@
                 width: 15%;
                 max-width: 150px;
                 padding: 5px 20px;
+            }
+        }
+        .plan_section {
+            h1.title {
+                font-size: 200%;
+            }
+            input.totalPrice {
+                width: 60%;
             }
         }
     }
