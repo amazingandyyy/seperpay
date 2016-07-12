@@ -29,6 +29,7 @@ angular
             .state(dashboard_plan_start)
             .state(dashboard_plan_choose)
             .state(dashboard_plan_single)
+            .state(dashboard_plan_single_preview)
             .state(dashboard_plan_multiple)
             .state(dashboard_account)
             // .state(ppage)
@@ -134,7 +135,18 @@ let dashboard_plan_single = {
     views: {
         dashboard_child_section: {
             templateUrl: '/html/dashboard/dashboard_plan_single.html',
-            controller: 'dashboardCtrl'
+            controller: 'dashboardPlanCtrl'
+        }
+    }
+}
+let dashboard_plan_single_preview = {
+    name: 'dashboard_plan_single_preview',
+    url: '/choose/single/preview',
+    parent: 'dashboard_plan',
+    views: {
+        dashboard_child_section: {
+            templateUrl: '/html/dashboard/dashboard_plan_single_preview.html',
+            controller: 'dashboardPlanCtrl'
         }
     }
 }

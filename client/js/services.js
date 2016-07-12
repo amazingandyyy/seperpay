@@ -5,6 +5,7 @@ angular
     .service('Account', Account)
     .service('Payment', Payment)
     .factory('focus', focus)
+    .service('Plan', Plan)
     // .directive('stateLoadingIndicator', stateLoadingIndicator)
 function Account($http) {
     this.getCurrentUser = () => {
@@ -42,7 +43,7 @@ function Account($http) {
     }
 }
 
-function Payment($http){
+function Payment($http) {
     this.chargeNow = (dataObj) => {
         return $http({
             method: 'POST',
@@ -60,6 +61,22 @@ function focus($rootScope, $timeout) {
     }
 }
 
+function Plan($q) {
+    var previewPlan = {}
+    this.addSinglePreview = (plan) => {
+        return $q((res, rej) => {
+            previewPlan = plan
+            res(previewPlan)
+        })
+    }
+    this.getSinglePreview = () => {
+        return $q((res, rej) => {
+            if(previewPlan){
+                res(previewPlan)
+            }
+        })
+    }
+}
 // function stateLoadingIndicator($rootScope) {
 //     return {
 //         restrict: 'E',
