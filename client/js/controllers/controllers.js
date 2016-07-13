@@ -7,81 +7,67 @@ angular
     .controller('dashboardCtrl', dashboardCtrl)
     .controller('dashboardPlanCtrl', dashboardPlanCtrl)
 
-function homeCtrl($rootScope) {
+function homeCtrl($scope, $auth, $state, Account, $window, $rootScope) {
     console.log('homeCtrl loaded')
-    $rootScope.previousState
-    $rootScope.currentState
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
         $rootScope.previousState = from.name;
         $rootScope.currentState = to.name;
         console.log('Previous state:' + $rootScope.previousState)
         console.log('Current state:' + $rootScope.currentState)
-    })
-    $rootScope.$on('animStart', function($event, element, speed) {})
-    $rootScope.$on('animEnd', function($event, element, speed) {})
-}
-
-function authCtrl($scope, $auth, $state, Account, $window) {
-    console.log('authCtrl loaded')
-
-    $scope.getCurrentUser = () => {
         getCurrentUser()
-    }
-
-    $scope.auth_enter = (authData) => {
-        $auth.signup(authData)
-            .then(res => {
-                $auth.setToken(res)
-                $state.go('dashboard', {}, {
-                    reload: true
-                })
-                console.log('res @auth_enter: ', res.data)
-                getCurrentUser()
-                    // toastr.info('You have successfully created a new account and have been signed-in');
-            }, err => {
-                console.log('err @auth_enter: ', err)
-                    // toastr.error(response.data.message);
-            })
-    }
-
-    $scope.authenticate = (provider) => {
-        $auth.authenticate(provider);
-    }
-    $scope.logout = () => {
-        $auth.logout()
-        $scope.currentUser = null;
-        $state.go('home', {}, {
-            reload: true
-        })
-        $window.location.reload();
-    }
-
+    })
+    // $rootScope.$on('animStart', function($event, element, speed) {})
+    // $rootScope.$on('animEnd', function($event, element, speed) {})
     function getCurrentUser() {
+        console.log('check');
         if ($auth.getToken()) {
+            console.log('check');
             Account.getCurrentUser($auth.getToken())
                 .then(res => {
-                    console.log('res @getCurrentUser: ', res.data)
+                    console.log('res @getCurrentUser from state change: ', res.data)
                     $scope.currentUser = res.data
                 }, err => {
                     $state.go('authEntrance')
                 })
         }
     }
+}
+
+function authCtrl($scope, $auth, $state, Account, $window, $rootScope) {
+    console.log('authCtrl loaded')
+
+    $scope.auth_enter = (authData) => {
+        $auth.signup(authData)
+            .then(res => {
+                $auth.setToken(res);
+                $state.go('dashboard', {}, {
+                    reload: true
+                })
+                console.log('res @auth_enter: ', res.data)
+            }, err => {
+                console.log('err @auth_enter: ', err)
+            })
+    }
+
+    $scope.authenticate = (provider) => {
+        $auth.authenticate(provider);
+    }
 
 }
 
-function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $interval) {
+function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $window) {
     console.log('dashboardCtrl loaded')
-    Account.getCurrentUser($auth.getToken())
-        .then(res => {
-            if (!$rootScope.currentUser) {
-                $rootScope.currentUser = res.data
-            }
-            console.log('res @getCurrentUser: ', res.data)
-            checkVerifyPhoneSentStatus(res.data)
-        }, err => {
-            $state.go('home')
+    // checkVerifyPhoneSentStatus($rootScope.currentUser)
+
+    $scope.logout = () => {
+        console.log('check');
+        $auth.logout()
+        $scope.currentUser = null;
+        $state.go('landing', {}, {
+            reload: true
         })
+        $window.location.reload();
+    }
 
     function checkVerifyPhoneSentStatus(currentUserData) {
         $scope.verifyPhoneSentOut = false

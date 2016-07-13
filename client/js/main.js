@@ -3,7 +3,7 @@
 $(document).ready(init);
 
 function init() {
-    console.log('jquery loaded');
+    // console.log('jquery loaded');
     sticky()
     windowScrollDown()
 }

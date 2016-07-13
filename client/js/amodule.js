@@ -21,7 +21,7 @@ angular
         //     });
 
         $stateProvider
-            .state(home)
+            .state(landing)
             .state(authEntrance)
             .state(dashboard)
             .state(dashboard_payment)
@@ -53,13 +53,13 @@ angular
     });
 
 
-let home = {
-    name: 'home',
+let landing = {
+    name: 'landing',
     url: '/',
     views: {
         main: {
-            templateUrl: '/html/home.html',
-            controller: 'homeCtrl'
+            templateUrl: '/html/landing.html',
+            controller: 'authCtrl'
         }
     }
 }

@@ -6,6 +6,7 @@ angular
     .service('Payment', Payment)
     .factory('focus', focus)
     .service('Plan', Plan)
+    .service('Storage', Storage)
     // .directive('stateLoadingIndicator', stateLoadingIndicator)
 function Account($http) {
     this.getCurrentUser = () => {
@@ -61,20 +62,36 @@ function focus($rootScope, $timeout) {
     }
 }
 
-function Plan($q) {
+function Plan($q, Storage) {
     this.addSinglePreview = (plan) => {
-        localStorage.planPreviewData = '';
-        return $q((res, rej) => {
-            localStorage.planPreviewData = JSON.stringify(plan)
-            res(localStorage.planPreviewData)
-        })
+        Storage.save(plan)
     }
     this.getSinglePreview = () => {
         return $q((res, rej) => {
-            if(localStorage.planPreviewData){
-                res(JSON.parse(localStorage.planPreviewData))
-            }
+            Storage.get().then(function() {
+                res(Storage.get().planPreviewData)
+            })
         })
+    }
+}
+
+function Storage($q) {
+    this.get = () => {
+        // return $q((res, rej) => {
+        //     if (!localStorage.seperpay) {
+        //         localStorage.seperpay = {}
+        //         res(JSON.parse(localStorage.seperpay))
+        //     } else if (localStorage.seperpay) {
+        //         res(JSON.parse(localStorage.seperpay))
+        //     }
+        // })
+    }
+
+    this.save = (obj) => {
+        console.log('obj: ', obj);
+        // var key = obj
+        // var obj = JSON.stringify(obj)
+        // localStorage
     }
 }
 // function stateLoadingIndicator($rootScope) {

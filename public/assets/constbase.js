@@ -4,7 +4,7 @@
 $(document).ready(init)
 
 function init() {
-    console.log('constbase loaded');
+    // console.log('constbase loaded');
     cssClassActivate()
     if ($('.dev-mode').length == 1) {
         initalDevPanel()

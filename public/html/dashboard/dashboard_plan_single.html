@@ -6,7 +6,7 @@
     <h2 class="title">Downpay</h2>
     <input type="text" class="totalPrice" ng-model="plan.downpay" placeholder="300.00">
 </div>
-<div class="plan_section animated zoomIn" ng-if="plan.total>1">
+<div class="plan_section animated flipInY" ng-if="plan.total>1">
     <h2 class="title">How many installments?</h2>
     <div class="form-item">
         <input class="range" type="range" min="1" max="12" ng-init="plan.times = 3" ng-model="plan.times" ng-change="updateTimes(plan.times)">

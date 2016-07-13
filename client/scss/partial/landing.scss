@@ -57,18 +57,21 @@
         text-align: center;
         color: white;
         z-index: -1;
+        min-height: 500px !important;
         img.hero-logo {
             display: block;
-            margin: auto;
-            width: 80px;
+            margin: auto auto -20px;
         }
-        h1.title {
+        h1.hero-title {
             font-family: 'Teko', 'Lato';
             text-transform: capitalize;
             font-style: italic;
             font-size: 300%;
-        }
+            text-shadow: -1px 1px 1px rgba(0,0,0,0.6);
 
+        }
+        h1.hero-title div {
+        }
     }
     .signUp {
         margin: auto;
@@ -188,7 +191,7 @@
     }
     .white-card {
         .information {
-            padding: 0px 10px 30px;
+            padding: 0 10px 30px;
         }
     }
     footer {
@@ -243,8 +246,8 @@
     .home-page {
         .main-hero {
             padding-top: 160px;
-            min-height: 600px;
-            h1.title {
+            min-height: 600px !important;
+            h1.hero-title {
                 font-size: 600%;
                 line-height: 0.9em;
                 margin-bottom: 30px;
