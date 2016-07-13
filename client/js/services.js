@@ -62,17 +62,17 @@ function focus($rootScope, $timeout) {
 }
 
 function Plan($q) {
-    var previewPlan = {}
     this.addSinglePreview = (plan) => {
+        localStorage.planPreviewData = '';
         return $q((res, rej) => {
-            previewPlan = plan
-            res(previewPlan)
+            localStorage.planPreviewData = JSON.stringify(plan)
+            res(localStorage.planPreviewData)
         })
     }
     this.getSinglePreview = () => {
         return $q((res, rej) => {
-            if(previewPlan){
-                res(previewPlan)
+            if(localStorage.planPreviewData){
+                res(JSON.parse(localStorage.planPreviewData))
             }
         })
     }
