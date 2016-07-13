@@ -7,35 +7,30 @@ angular
     .controller('dashboardCtrl', dashboardCtrl)
     .controller('dashboardPlanCtrl', dashboardPlanCtrl)
 
-function homeCtrl($scope, $auth, $state, Account, $window, $rootScope) {
-    console.log('homeCtrl loaded')
+function homeCtrl($scope, $auth, $state, Account, $window, $rootScope, $location) {
     $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
         $rootScope.previousState = from.name;
         $rootScope.currentState = to.name;
-        console.log('Previous state:' + $rootScope.previousState)
-        console.log('Current state:' + $rootScope.currentState)
+        console.log($rootScope.previousState, ' >>> ', $rootScope.currentState)
+        if ($rootScope.currentState == 'authEntrance' && $scope.currentUser) $state.go('dashboard')
+        $scope.currentUrl = $location.$$path;
         getCurrentUser()
     })
-    // $rootScope.$on('animStart', function($event, element, speed) {})
-    // $rootScope.$on('animEnd', function($event, element, speed) {})
+
     function getCurrentUser() {
-        console.log('check');
         if ($auth.getToken()) {
-            console.log('check');
             Account.getCurrentUser($auth.getToken())
                 .then(res => {
-                    console.log('res @getCurrentUser from state change: ', res.data)
+                    console.log('@CurrentUser: ', res.data)
                     $scope.currentUser = res.data
-                }, err => {
-                    $state.go('authEntrance')
-                })
+                }, (err) => $state.go('authEntrance'))
+        } else if (!$auth.getToken() && $location.$$path.includes('dashboard')) {
+            $state.go('authEntrance')
         }
     }
 }
 
 function authCtrl($scope, $auth, $state, Account, $window, $rootScope) {
-    console.log('authCtrl loaded')
-
     $scope.auth_enter = (authData) => {
         $auth.signup(authData)
             .then(res => {
@@ -44,9 +39,7 @@ function authCtrl($scope, $auth, $state, Account, $window, $rootScope) {
                     reload: true
                 })
                 console.log('res @auth_enter: ', res.data)
-            }, err => {
-                console.log('err @auth_enter: ', err)
-            })
+            }, (err) => console.log('err @auth_enter: ', err))
     }
 
     $scope.authenticate = (provider) => {
@@ -56,7 +49,7 @@ function authCtrl($scope, $auth, $state, Account, $window, $rootScope) {
 }
 
 function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $window) {
-    console.log('dashboardCtrl loaded')
+    // console.log('dashboardCtrl loaded')
     // checkVerifyPhoneSentStatus($rootScope.currentUser)
 
     $scope.logout = () => {
@@ -151,6 +144,7 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
         }
 
         $scope.previewSinglePlan = (plan) => {
+            console.log('plan: ', plan);
             Plan.addSinglePreview(plan).then(res => {
                 $state.go('dashboard_plan_single_preview')
             }, err => console.log('err @addSinglePreview: ', err))
@@ -163,22 +157,5 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
             $scope.planPreview = res;
             $scope.planPreview.installment = (res.total - res.downpay) / res.times
         }, err => console.log('err @getSinglePreview: ', err))
-
-        var uuid = createUUID()
-        console.log('uuid: ', uuid)
-
-        function createUUID() {
-            var s = [];
-            var hexDigits = "0123456789abcdef";
-            for (var i = 0; i < 36; i++) {
-                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-            }
-            s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
-            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
-            s[8] = s[13] = s[18] = s[23] = "-";
-
-            var uuid = s.join("");
-            return uuid;
-        }
     }
 }

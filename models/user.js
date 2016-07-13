@@ -1,28 +1,28 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-    bcrypt = require('bcryptjs'),
-    jwt = require('jsonwebtoken'),
-    moment = require('moment'),
-    uuid = require('uuid'),
-    CronJob = require('cron').CronJob;
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
+const uuid = require('uuid');
+const CronJob = require('cron').CronJob;
 
-var ses = require('node-ses'),
-    SESserver = ses.createClient({
+const ses = require('node-ses')
+const SESserver = ses.createClient({
         key: process.env.AWS_KEY,
         secret: process.env.AWS_SECRET
     })
     // let AWS = require('aws-sdk');
     // let s3 = new AWS.S3();
-    // var bucketName = process.env.AWS_BUCKET;
-    // var urlBase = process.env.AWS_URL_BASE;
-    // var CVPkey = process.env.MSFT_CVP_KEY;
+    // let bucketName = process.env.AWS_BUCKET;
+    // let urlBase = process.env.AWS_URL_BASE;
+    // let CVPkey = process.env.MSFT_CVP_KEY;
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-var User;
+let User;
 
-var userSchema = new mongoose.Schema({
+let userSchema = new mongoose.Schema({
     email: {
         data: {
             type: String,
@@ -89,7 +89,7 @@ userSchema.statics.authMiddleware = function(req, res, next) {
             message: 'Please make sure your request has an Authorization header'
         })
     }
-    var token = req.header('Authorization').split(' ')[1]
+    let token = req.header('Authorization').split(' ')[1]
 
     // console.log('tokennnn: ', token);
     jwt.verify(token, JWT_SECRET, (err, payload) => {
@@ -113,12 +113,12 @@ userSchema.statics.authMiddleware = function(req, res, next) {
 };
 
 function generateToken(data) {
-    var payload = {
+    let payload = {
         _id: data._id,
         iat: Date.now(),
         exp: moment().add(7, 'day').unix()
     };
-    var token = jwt.sign(payload, JWT_SECRET);
+    let token = jwt.sign(payload, JWT_SECRET);
     return token
 }
 
@@ -225,7 +225,7 @@ userSchema.statics.enterSystem = function(userObj, cb) {
                             }
                             cb(null, token)
 
-                            // var job = new CronJob({
+                            // let job = new CronJob({
                             //     cronTime: '* * * * * *',
                             //     onTick: function() {
                             //         console.log('yo');
@@ -243,7 +243,7 @@ userSchema.statics.enterSystem = function(userObj, cb) {
 
             bcrypt.hash(userObj.password, 12, (err, hash) => {
                 if (err) return cb(err);
-                var user = new User({
+                let user = new User({
                     email: {
                         data: userObj.email
                     },
@@ -281,14 +281,14 @@ userSchema.statics.enterSystem = function(userObj, cb) {
         })
 }
 
-var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+let twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 userSchema.statics.sendPhoneVerify = function(userObj, cb) {
-    var currentUser = userObj.userData;
+    let currentUser = userObj.userData;
     // console.log('currentUser before send: ', currentUser)
     function generateVerifyToken() {
-        var verifyCodeArr = ''
-        for (var i = 0; i < 4; i++) {
+        let verifyCodeArr = ''
+        for (let i = 0; i < 4; i++) {
             verifyCodeArr += ~~(Math.random() * 10)
         }
         return verifyCodeArr
@@ -305,7 +305,7 @@ userSchema.statics.sendPhoneVerify = function(userObj, cb) {
                 return cb(null, user)
             }
             user.phone.data = userObj.phone // change user's phone Number as they type in
-            var now = Date.now()
+            let now = Date.now()
             if (user.phone.verifyCode.expiredAt > now) {
                 // code is still good
                 console.log(`${(user.phone.verifyCode.expiredAt - now) / 1000} secs left, it\'s still a good code: `, user.phone.verifyCode.data)
@@ -316,7 +316,7 @@ userSchema.statics.sendPhoneVerify = function(userObj, cb) {
             console.log('code expired or code does not exist');
             // code expired or code does not exist
             // -> send verify code to user
-            var code = generateVerifyToken()
+            let code = generateVerifyToken()
             user.phone.verifyCode.data = code
             user.phone.verifyCode.expiredAt = Date.now() + (1000 * 300) // expire in 5 minutes
             user.save((err, savedUser) => {
@@ -402,18 +402,18 @@ userSchema.statics.verifyPhoneToken = function(userObj, cb) {
                 return cb(err)
             }
             console.log('dbUser: ', dbUser);
-            var now = Date.now()
+            let now = Date.now()
             if (dbUser.phone.verified) {
                 return cb(null, {
                     msg: "It's already been verified!",
                     dbUser: dbUser
                 })
-            }else if (dbUser.phone.verifyCode.expiredAt < now) {
+            } else if (dbUser.phone.verifyCode.expiredAt < now) {
                 // code is expired
                 return cb(null, {
                     msg: "expired"
                 })
-            }else if (code == dbUser.phone.verifyCode.data) {
+            } else if (code == dbUser.phone.verifyCode.data) {
                 console.log('not expired and matched!');
                 // codes are the same
                 // -> set user's phone verified to true
@@ -423,7 +423,7 @@ userSchema.statics.verifyPhoneToken = function(userObj, cb) {
                     console.log(savedUser)
                     sendTwilio(savedUser.phone.data, `Big congrats! Your phone, ${savedUser.phone.data} is now successfully verified! Login dashboard to create a plan: ${process.env.SITE_CURRENT_URL}`, savedUser, cb)
                 })
-            }else{
+            } else {
                 // code is not expired
                 console.log('not expired but not matched!')
                 cb(null, {
@@ -438,7 +438,7 @@ userSchema.statics.verifyPhoneToken = function(userObj, cb) {
         // });
 }
 
-var stripe = require('stripe')(process.env.STRIPE_API_SECRET)
+let stripe = require('stripe')(process.env.STRIPE_API_SECRET)
 
 userSchema.statics.chargedNow = function(dataObj, cb) {
         // console.log('dataObj: ', dataObj)
@@ -466,8 +466,8 @@ userSchema.statics.chargedNow = function(dataObj, cb) {
         }, cb)
     }
     // userSchema.statics.updateProfilePhoto = function(data, cb) {
-    //     var userId = data.userId;
-    //     var file = data.file;
+    //     let userId = data.userId;
+    //     let file = data.file;
     //     if (!file.mimetype.match(/image/)) {
     //         return cb({
     //             error: 'File must be image'
