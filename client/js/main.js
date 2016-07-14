@@ -3,14 +3,13 @@
 $(document).ready(init);
 
 function init() {
-    // console.log('jquery loaded');
     sticky()
     windowScrollDown()
 }
 
 function sticky() {
-    $(".sticky").sticky({
-        topSpacing: 60
+    $(".singlePlanPreviewSticky").sticky({
+        topSpacing: 80
     })
 }
 

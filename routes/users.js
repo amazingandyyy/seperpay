@@ -34,10 +34,8 @@ router.put('/:userId', User.authMiddleware, (req, res) => {
         User.findByIdAndUpdate(req.params.userId, req.body, {
             new: true
         }, (err, user) => {
-            console.log('userrr: ', user);
             res.status(err ? 400 : 200).send(err || user);
         });
     }
 })
-
 module.exports = router;

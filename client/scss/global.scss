@@ -30,6 +30,30 @@ body {
             background: darken(#65CFF1, 10%);
         }
     }
+    button.btn.btn-secondary {
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin: 10px auto 20px;
+        border: none;
+        border-radius: 0;
+        background: red;
+        width: 100%;
+        background: lighten($brand-secondary, 5%);
+        color: white;
+        height: 55px;
+        outline: none;
+        transition: 0.1s background ease-in-out;
+        cursor: pointer;
+        overflow: hidden;
+        user-select: none;
+        &:hover {
+            background:  lighten($brand-secondary, 10%);
+        }
+        &:active {
+            background: darken($brand-secondary, 10%);
+        }
+    }
     .white-card {
         user-select: none;
         display: inline-block;

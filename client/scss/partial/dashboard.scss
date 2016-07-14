@@ -9,7 +9,7 @@
         width: 100%;
         top: 0;
         right: 0;
-        position: absolute;
+        position: fixed;
         background-color: rgba(255,255,255,1);
         z-index: 99;
         border-bottom: 1px solid rgba(0,0,0,0.1);
@@ -30,7 +30,7 @@
         }
     }
     .menu {
-        position: absolute;
+        position: fixed;
         top: 41px;
         left: 0;
         width: 100%;
@@ -63,9 +63,15 @@
     h2.title {
         font-size: 100%;
         text-transform: uppercase;
-        color: rgba(0,0,0,0.4);
+        color: rgba(0,0,0,0.7);
         font-weight: 600;
         letter-spacing: 1px;
+    }
+    h2.notes {
+        font-size: 80%;
+        color: rgba(0,0,0,0.6);
+        font-weight: 600;
+        // letter-spacing: 0px;
     }
     .list-group {
         text-transform: capitalize;
@@ -102,6 +108,7 @@
                 background: $brand-secondary;
             }
         }
+        .sticky.stickyTriggered {}
     }
     .form-item {
         input.total {
@@ -124,11 +131,14 @@
             white-space: nowrap;
             padding: 0 -10px;
             width: 70%;
+            cursor: col-resize;
         }
         input[type=range]::-webkit-slider-runnable-track {
             outline: none;
+            cursor: col-resize;
         }
         input[type=range]::-webkit-slider-thumb {
+            cursor: col-resize;
             -webkit-appearance: none;
             // box-shadow: 0 2px 0.6px -0.7px rgba(0,0,0,2);
             border-radius: 50%;
@@ -171,11 +181,18 @@
             }
         }
     }
+    .right_container {
+        // border-top: 1px solid rgba(0,0,0,0.2);
+        // box-shadow: 0px -10px 10px -10px rgba(0,0,0,0.1);
+    }
+    .singlePlanPreviewSticky {
+        margin-top: 9px;
+    }
     .plan_section {
         background: white;
         text-align: center;
-        padding: 20px 10px;
-        margin: 20px auto;
+        padding: 20px 5px;
+        margin: 10px auto;
         h1.title {
             margin: 0 auto;
             font-weight: 300;
@@ -184,14 +201,53 @@
         input.totalPrice {
             margin: auto;
             text-align: center;
-            font-size: 400%;
+            font-size: 300%;
             font-weight: 900;
-            border: 0px solid;
+            border: 0 solid;
             display: block;
             outline: none;
-            height: 100px;
-            margin-top: 10px;
-            width: 90%;
+            margin-top: 0;
+            padding: 5px 10px;
+            width: 90% !important;
+        }
+        .row {
+            margin: 0;
+        }
+        .intervalChoice {
+            padding: 0 10px;
+            .choice {
+                color: rgba(0,0,0,0.8);
+                cursor: pointer;
+                padding: 10px 5px;
+                margin: 5px 0;
+                border: 1px solid rgba(0,0,0,0.1);
+                border-radius: 3px;
+                &.selected {
+                    background: $brand-primary;
+                    color: white;
+                    border-color: $brand-primary;
+                    &:hover {
+                        background: $brand-primary;
+                        border-color: $brand-primary;
+                    }
+                    &:active {
+                        background: darken($brand-primary, 5%);
+                        border-color: darken($brand-primary, 5%);
+                    }
+                }
+                &:hover {
+                    background: rgba(0,0,0,0.05);
+                    border-color: rgba(0,0,0,0.1);
+                }
+            }
+        }
+        &.summary {
+            table.table {
+                text-align: left;
+                td {
+                    font-weight: 600;
+                }
+            }
         }
     }
 }
@@ -209,8 +265,12 @@
                 font-size: 200%;
             }
             input.totalPrice {
-                width: 60%;
+                width: 40%;
             }
+        }
+        .right_container {
+            border-top: 1px solid rgba(0,0,0,0);
+            box-shadow: 0px -3px 15px -5px rgba(0,0,0,0);
         }
     }
 }

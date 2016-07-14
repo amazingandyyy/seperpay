@@ -9,6 +9,7 @@ router.get('/', function(req, res) {
 
 router.use('/auth', require('./auth'));
 router.use('/users', require('./users'));
+router.use('/plans', require('./plans'));
 router.use('/verify', require('./verify'));
 router.use('/payment', require('./payment'));
 

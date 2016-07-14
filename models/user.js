@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const uuid = require('uuid');
+const autopopulate = require('mongoose-autopopulate');
 const CronJob = require('cron').CronJob;
 
 const ses = require('node-ses')
@@ -80,8 +81,15 @@ let userSchema = new mongoose.Schema({
                 type: Object
             }
         }
+    }],
+    plans: [{
+        type: mongoose.Schema.Types.ObjectId,
+        // autopopulate: true,
+        ref: 'Plan'
     }]
 })
+userSchema.plugin(autopopulate);
+
 
 userSchema.statics.authMiddleware = function(req, res, next) {
     if (!req.header('Authorization')) {
@@ -285,7 +293,7 @@ let twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILI
 
 userSchema.statics.sendPhoneVerify = function(userObj, cb) {
     let currentUser = userObj.userData;
-    // console.log('currentUser before send: ', currentUser)
+    console.log('currentUser before send: ', currentUser)
     function generateVerifyToken() {
         let verifyCodeArr = ''
         for (let i = 0; i < 4; i++) {

@@ -62,7 +62,7 @@ function focus($rootScope, $timeout) {
     }
 }
 
-function Plan($q, Storage) {
+function Plan($q, Storage, $http) {
     this.addSinglePreview = (plan) => {
         return $q((res, req) => {
             localStorage.planPreviewData = JSON.stringify(plan)
@@ -74,6 +74,15 @@ function Plan($q, Storage) {
             res(JSON.parse(localStorage.planPreviewData))
         })
     }
+
+    this.saveSinglePlan = (data) => {
+        return $http({
+            method: 'POST',
+            url: `/api/plans/saveSinglePlan`,
+            data: data
+        })
+    }
+
 }
 
 function Storage($q) {

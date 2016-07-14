@@ -22,7 +22,7 @@ function homeCtrl($scope, $auth, $state, Account, $window, $rootScope, $location
             Account.getCurrentUser($auth.getToken())
                 .then(res => {
                     console.log('@CurrentUser: ', res.data)
-                    $scope.currentUser = res.data
+                    $rootScope.currentUser = res.data
                 }, (err) => $state.go('authEntrance'))
         } else if (!$auth.getToken() && $location.$$path.includes('dashboard')) {
             $state.go('authEntrance')
@@ -82,6 +82,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $win
                 userData: $rootScope.currentUser,
                 phone: phone
             }
+            console.log('userObj: ', userObj);
             Account.sendVerifyCode(userObj)
                 .then(res => {
                     console.log('res @sendVerifyCode: ', res.data)
@@ -102,7 +103,15 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $win
             Account.verifyCode(userObj)
                 .then(res => {
                     console.log('res @verifyCode: ', res.data)
-                    $rootScope.currentUser.phone.verified = true;
+                    if (res.data.msg) {
+                        if (res.data.msg == 'incorrect') {
+                            console.log('err: incorrect');
+                        } else if (res.data.msg = 'expired')
+                            console.log('err: expired');
+
+                    } else {
+                        $rootScope.currentUser.phone.verified = true;
+                    }
                 }, err => {
                     console.log('err @verifyCode: ', err);
                 })
@@ -143,11 +152,40 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
             }
         }
 
+        $scope.defaultPlanTimes = (times) => {
+            if (!times) {
+                return $scope.plan.times = 3
+            }
+            return $scope.plan
+        }
+
         $scope.previewSinglePlan = (plan) => {
             console.log('plan: ', plan);
             Plan.addSinglePreview(plan).then(res => {
                 $state.go('dashboard_plan_single_preview')
-            }, err => console.log('err @addSinglePreview: ', err))
+            }, (err) => console.log('err @addSinglePreview: ', err))
+        }
+
+        $scope.plan = {}
+
+        $scope.singlePayment = () => {
+            return (($scope.plan.total - $scope.plan.downpay) / $scope.plan.times)
+        }
+
+        $scope.intervalSelected = (choice) => {
+            if ($scope.plan.interval == choice) {
+                $scope.plan.interval = null
+            } else {
+                $scope.plan.interval = choice
+            }
+        }
+
+        if ($rootScope.previousState == 'dashboard_plan_single_preview') {
+            Plan.getSinglePreview().then(res => {
+                console.log('res @getSinglePreview data back: ', res)
+                $scope.plan = res;
+                $scope.plan.times = res.times
+            }, (err) => console.log('err @getSinglePreview: ', err))
         }
     }
 
@@ -156,6 +194,19 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
             console.log('res @getSinglePreview: ', res)
             $scope.planPreview = res;
             $scope.planPreview.installment = (res.total - res.downpay) / res.times
-        }, err => console.log('err @getSinglePreview: ', err))
+        }, (err) => console.log('err @getSinglePreview: ', err))
+
+        $scope.saveSinglePlan = (plan) => {
+            let saveSinglePlanInfo = {
+                planDetails: plan,
+                creator: $rootScope.currentUser
+            }
+            console.log('saveSinglePlanInfo: ', saveSinglePlanInfo);
+            Plan.saveSinglePlan(saveSinglePlanInfo)
+                .then(res => {
+                    console.log('res @saveSinglePlan: ', res.data)
+                }, (err) => console.log('err @saveSinglePlan: ', err))
+
+        }
     }
 }
