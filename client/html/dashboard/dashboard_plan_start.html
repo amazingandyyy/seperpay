@@ -1,1 +1,52 @@
-<button class="btn btn-block btn-primary" ui-sref="dashboard_plan_choose">Create a plan</button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <button class="btn btn-primary" ui-sref="dashboard_plan_choose">Create a plan</button>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 plansList">
+            <hr>
+            <div ng-repeat="plan in currentUser.plans" class="col-xs-12 col-sm-6 col-md-4">
+                <svg class="plan" ui-sref="dashboard_plan_details({planId: plan._id})" width="100%" style="max-width:350px" viewBox="12354 5186 294 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <rect id="path-1" x="0" y="0" width="292" height="179" rx="8"></rect>
+                        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-3">
+                            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+                            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+                            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowOffsetOuter1"></feColorMatrix>
+                        </filter>
+                    </defs>
+                    <g id="Group-12" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(12355.000000, 5187.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Mask">
+                            <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        </g>
+                        <path d="M292,116 L292,20 C265.490332,20 244,41.490332 244,68 C244,94.509668 265.490332,116 292,116 Z M292,101.6 L292,34.4 C273.443232,34.4 258.4,49.4432324 258.4,68 C258.4,86.5567676 273.443232,101.6 292,101.6 Z" id="Combined-Shape" fill="#04AADC" mask="url(#mask-2)"></path>
+                        <text id="$59-/mon." mask="url(#mask-2)" font-family="Lato-Light, Lato" font-size="41" font-weight="300" letter-spacing="-1.42078609">
+                            <tspan x="82.0275722" y="102" fill="#1B1B1B">{{plan.data.installment | currency}} </tspan>
+                            <!-- <tspan x="155.597428" y="102" font-size="25" letter-spacing="-0.9" fill="#1C1C1C">/mon.</tspan> -->
+                        </text>
+                        <text id="/-weekly" stroke="none" fill="none" font-family="Lato" font-size="16" font-weight="500" letter-spacing="-0.508754849">
+                            <tspan x="149.774039" y="121" fill="#838383">/ {{plan.data.interval}}</tspan>
+                        </text>
+                        <text id="$100-downpay" mask="url(#mask-2)" font-family="Lato-Heavy, Lato" font-size="16" font-weight="600" letter-spacing="-0.508754849" fill="#838383">
+                            <tspan x="13" y="25">{{plan.data.downpay | currency}} downpay</tspan>
+                        </text>
+                        <text id="for-3-months" mask="url(#mask-2)" font-family="Lato-Heavy, Lato" font-size="16" font-weight="600" letter-spacing="-0.508754849" fill="#838383">
+                            <tspan x="160" y="166">for {{plan.data.times}} installments</tspan>
+                        </text>
+                        <text id="2883-3381" mask="url(#mask-2)" font-family="Beirut" font-size="20" font-weight="bold" letter-spacing="0.802449135" fill="#3A3A3A">
+                            <tspan x="13" y="166">987683-3381</tspan>
+                        </text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>

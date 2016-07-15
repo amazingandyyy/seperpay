@@ -205,8 +205,26 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
             Plan.saveSinglePlan(saveSinglePlanInfo)
                 .then(res => {
                     console.log('res @saveSinglePlan: ', res.data)
+                    // $state.go('dashboard_plan_start')
+                    $state.go('dashboard_plan_start', {}, { reload: true });
                 }, (err) => console.log('err @saveSinglePlan: ', err))
-
         }
     }
+
+    $scope.getAllPlans = () => {
+        let currentUserId = $rootScope.currentUser._id
+        console.log('currentUserId: ', currentUserId);
+    }
+
+    if ($rootScope.currentState == 'dashboard_plan_details') {
+        Plan.getSinglePlan($state.params.planId)
+            .then(res => {
+                console.log('res @getSinglePlan: ', res.data.data)
+                $scope.plan = res.data.data;
+                // if(res.data.data.creator){
+                //     return
+                // }
+            }, (err) => console.log('err @saveSinglePlan: ', err))
+    }
+
 }

@@ -85,6 +85,18 @@
     .dashboard_plan {
         padding-top: 40px;
         color: rgba(0,0,0,0.8);
+        .plansList {
+            padding: 0;
+            transition: 0.1s all ease-in-out;
+            .plan {
+                cursor: pointer;
+                &:hover {
+                    transition: 0.1s all ease-in-out;
+                    transform: scale(1.02);
+                    opacity: 0.7;
+                }
+            }
+        }
         .white-card {
             min-height: 200px;
             display: flex;
@@ -270,7 +282,7 @@
         }
         .right_container {
             border-top: 1px solid rgba(0,0,0,0);
-            box-shadow: 0px -3px 15px -5px rgba(0,0,0,0);
+            box-shadow: 0 -3px 15px -5px rgba(0,0,0,0);
         }
     }
 }

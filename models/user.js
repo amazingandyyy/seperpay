@@ -84,7 +84,7 @@ let userSchema = new mongoose.Schema({
     }],
     plans: [{
         type: mongoose.Schema.Types.ObjectId,
-        // autopopulate: true,
+        autopopulate: true,
         ref: 'Plan'
     }]
 })

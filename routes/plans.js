@@ -17,5 +17,12 @@ router.post('/saveSinglePlan', User.authMiddleware, (req, res) => {
         })
     }
 })
+router.get('/getSinglePlan/:id', User.authMiddleware, (req, res) => {
+        Plan.findById(req.params.id, (err, plan) => {
+            if (err) return console.log('err: ', err);
+            console.log('plan: ', plan)
+            res.status(err ? 400 : 200).send(err || plan)
+        })
+})
 
 module.exports = router;

@@ -83,6 +83,13 @@ function Plan($q, Storage, $http) {
         })
     }
 
+    this.getSinglePlan = (planId) => {
+        return $http({
+            method: 'GET',
+            url: `/api/plans/getSinglePlan/${planId}`
+        })
+    }
+
 }
 
 function Storage($q) {
