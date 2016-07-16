@@ -28,6 +28,7 @@ angular
             .state(dashboard_plan)
             .state(dashboard_plan_start)
             .state(dashboard_plan_details)
+            .state(dashboard_plan_details_edit)
             .state(dashboard_plan_choose)
             .state(dashboard_plan_single)
             .state(dashboard_plan_single_preview)
@@ -120,11 +121,22 @@ let dashboard_plan_start = {
 }
 let dashboard_plan_details = {
     name: 'dashboard_plan_details',
-    url: '/:planId',
+    url: '/details/:planId',
     parent: 'dashboard_plan',
     views: {
         dashboard_child_section: {
             templateUrl: '/html/dashboard/dashboard_plan_details.html',
+            controller: 'dashboardPlanCtrl'
+        }
+    }
+}
+let dashboard_plan_details_edit = {
+    name: 'dashboard_plan_details_edit',
+    url: '/details/:planId/edit',
+    parent: 'dashboard_plan',
+    views: {
+        dashboard_child_section: {
+            templateUrl: '/html/dashboard/dashboard_plan_details_edit.html',
             controller: 'dashboardPlanCtrl'
         }
     }

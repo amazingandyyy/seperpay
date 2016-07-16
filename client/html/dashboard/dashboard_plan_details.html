@@ -1,9 +1,8 @@
-<div class="container">
+<div class="container-fluid dashboard_plan_details">
     <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <div class="plan_section" style="background: rgba(0,0,0,0)" ng-init="plan.type = 'single' ">
-                <h2 class="title">Plan</h2>
+        <div class="col-sm-12 col-md-4">
+            <div class="plan_section">
+                <h2 class="title">Plan Card <small>Preview</small></h2>
             <svg width="90%" style="max-width:350px" viewBox="12354 5186 294 181" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <defs>
                     <rect id="path-1" x="0" y="0" width="292" height="179" rx="8"></rect>
@@ -41,8 +40,12 @@
                 </g>
             </svg>
             </div>
+            <!-- <button ng-if="!itCreator()" type="button" class="btn btn-block btn-primary" ng-click="acceptSinglePlan(plan)">Accept this plan</button> -->
+
+        </div>
+        <div class="col-sm-12 col-md-8">
             <div class="plan_section summary">
-                <h2 class="title">Plan Summary</h2>
+                <h2 class="title">Plan Summary <a ng-if="itCreator()" ui-sref="dashboard_plan_details_edit({planId: planId})">edit</a></h2>
                 <table class="table">
                     <tbody>
                         <tr>
@@ -70,10 +73,6 @@
                     </tbody>
                 </table>
             </div>
-            <button ng-if="true" type="button" class="btn btn-block btn-secondary" ng-click="editSinglePlan(plan)">Edit this plan</button>
-            <button ng-if="true" type="button" class="btn btn-block btn-primary" ng-click="acceptSinglePlan(plan)">Accept this plan</button>
-
         </div>
-        <div class="col-sm-2"></div>
     </div>
 </div>

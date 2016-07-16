@@ -179,14 +179,6 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
                 $scope.plan.interval = choice
             }
         }
-
-        if ($rootScope.previousState == 'dashboard_plan_single_preview') {
-            Plan.getSinglePreview().then(res => {
-                console.log('res @getSinglePreview data back: ', res)
-                $scope.plan = res;
-                $scope.plan.times = res.times
-            }, (err) => console.log('err @getSinglePreview: ', err))
-        }
     }
 
     if ($rootScope.currentState == 'dashboard_plan_single_preview') {
@@ -197,6 +189,7 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
         }, (err) => console.log('err @getSinglePreview: ', err))
 
         $scope.saveSinglePlan = (plan) => {
+            console.log(plan)
             let saveSinglePlanInfo = {
                 planDetails: plan,
                 creator: $rootScope.currentUser
@@ -205,9 +198,21 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
             Plan.saveSinglePlan(saveSinglePlanInfo)
                 .then(res => {
                     console.log('res @saveSinglePlan: ', res.data)
-                    // $state.go('dashboard_plan_start')
-                    $state.go('dashboard_plan_start', {}, { reload: true });
+                        // $state.go('dashboard_plan_start', {}, { reload: true });
+                    $state.go('dashboard_plan_details', {
+                        planId: res.data._id
+                    }, {
+                        reload: true
+                    });
                 }, (err) => console.log('err @saveSinglePlan: ', err))
+        }
+
+        $scope.dashboard_plan_single_preview_goback = (plan) => {
+            if ($rootScope.previousState == 'dashboard_plan_details_edit') {
+                $state.go('dashboard_plan_details_edit', {planId: plan._id})
+            }else if($rootScope.previousState == 'dashboard_plan_single'){
+                $state.go('dashboard_plan_single')
+            }
         }
     }
 
@@ -219,12 +224,68 @@ function dashboardPlanCtrl($scope, Account, $stateParams, $state, Plan, $rootSco
     if ($rootScope.currentState == 'dashboard_plan_details') {
         Plan.getSinglePlan($state.params.planId)
             .then(res => {
-                console.log('res @getSinglePlan: ', res.data.data)
+                console.log('res @getSinglePlan: ', res.data)
                 $scope.plan = res.data.data;
-                // if(res.data.data.creator){
-                //     return
-                // }
-            }, (err) => console.log('err @saveSinglePlan: ', err))
+                $scope.planId = res.data._id
+                $scope.itCreator = () => {
+                    return res.data.creator.includes($rootScope.currentUser._id)
+                }
+            }, (err) => console.log('err @getSinglePlan: ', err))
     }
+    if ($rootScope.currentState == 'dashboard_plan_details_edit') {
+        console.log($state.params.planId);
 
+        Plan.getSinglePlan($state.params.planId)
+            .then(res => {
+                if (!res.data.creator.includes($rootScope.currentUser._id)) {
+                    // it's not creator, then block the user out
+                    $state.go('dashboard')
+                }
+                console.log('res @getSinglePlan: ', res.data)
+                $scope.plan = res.data.data
+                $scope.plan._id = res.data._id
+                $scope.itCreator = () => {
+                    return res.data.creator.includes($rootScope.currentUser._id)
+                }
+                $scope.updateTimes = (times) => {
+                    $scope.installmentsGraphData = []
+                    for (var i = 0; i < times; i++) {
+                        var installment = ~~(($scope.plan.total / times));
+                        var height = ~~(200 * (2 / times))
+                        $scope.installmentsGraphData.push({
+                            price: installment,
+                            style: {
+                                height: `${height}px`,
+                                width: `90%`
+                            }
+                        })
+                    }
+                }
+
+                $scope.defaultPlanTimes = (times) => {
+                    if (!times) {
+                        return $scope.plan.times = 3
+                    }
+                    return $scope.plan
+                }
+
+                $scope.previewSinglePlan = (plan) => {
+                    Plan.addSinglePreview(plan).then(res => {
+                        $state.go('dashboard_plan_single_preview')
+                    }, (err) => console.log('err @addSinglePreview: ', err))
+                }
+
+                $scope.singlePayment = () => {
+                    return (($scope.plan.total - $scope.plan.downpay) / $scope.plan.times)
+                }
+
+                $scope.intervalSelected = (choice) => {
+                    if ($scope.plan.interval == choice) {
+                        $scope.plan.interval = null
+                    } else {
+                        $scope.plan.interval = choice
+                    }
+                }
+            }, (err) => console.log('err @getSinglePlan: ', err))
+    }
 }

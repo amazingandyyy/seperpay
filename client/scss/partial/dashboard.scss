@@ -121,6 +121,24 @@
             }
         }
         .sticky.stickyTriggered {}
+        .dashboard_plan_details {
+            .plan_section {
+                position: relative;
+                h2.title {
+                    margin-left: 10px;
+                    text-align: left;
+                    a {
+                        top: 20px;
+                        right: 20px;
+                        position: absolute;
+                        text-align: right;
+                    }
+                }
+                // &.summary {
+                //     padding: 10px 0px;
+                // }
+            }
+        }
     }
     .form-item {
         input.total {
