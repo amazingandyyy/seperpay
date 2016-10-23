@@ -125,6 +125,7 @@ function dashboardCtrl($scope, $auth, $state, Account, $rootScope, Payment, $win
             stripeToken: token,
             userData: $rootScope.currentUser
         }
+        
         Payment.chargeNow(dataObj).then(res => {
             console.log('res: ', res.data);
         }, function(err) {

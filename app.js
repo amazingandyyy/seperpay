@@ -9,7 +9,8 @@ let express = require('express'),
     logger = require('morgan'),
     mongoose = require('mongoose'),
     chalk = require('chalk'),
-    error = chalk.bold.red
+    error = chalk.bold.red,
+    crypto = require('crypto')
 
 let PORT = process.env.PORT
 const MONGOURL = process.env.MONGOLAB_URI
